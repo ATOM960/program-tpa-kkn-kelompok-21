@@ -286,7 +286,7 @@
 
     <!-- =====================================================================
          2. PORTAL ARENA GAME EDUKASI INTERAKTIF (BAGIAN UTAMA)
-         Menghubungkan langsung ke: game_new.html, peta.html, tembak.html
+         Menghubungkan langsung ke: petualangan.html, peta.html, tembak.html
     ====================================================================== -->
     <section id="arena-game" class="py-16 sm:py-24 bg-white relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -307,7 +307,7 @@
             <!-- Grid 3 Kartu Game Utama -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-                <!-- KARTU 1: Petualangan Mengaji -> game_new.html -->
+                <!-- KARTU 1: Petualangan Mengaji -> petualangan.html -->
                 <article class="playful-card bg-gradient-to-b from-emerald-50 to-white rounded-[2rem] border-2 border-emerald-200 shadow-lg overflow-hidden flex flex-col justify-between">
                     <div>
                         <!-- Banner Visual Kartu -->
@@ -478,7 +478,7 @@
                         <i class="fa-solid fa-folder-open"></i>
                     </div>
                     <div class="text-xs sm:text-sm text-emerald-900">
-                        <strong>Panduan Direktori Offline/Lokal TPA:</strong> Pastikan file utama ini berada dalam satu folder yang sama dengan <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-200 font-mono text-emerald-700">game_new.html</code>, <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-200 font-mono text-emerald-700">peta.html</code>, dan <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-200 font-mono text-emerald-700">tembak.html</code> agar tautan permainan terbuka otomatis.
+                        <strong>Panduan Direktori Offline/Lokal TPA:</strong> Pastikan file utama ini berada dalam satu folder yang sama dengan <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-200 font-mono text-emerald-700">petualangan.html</code>, <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-200 font-mono text-emerald-700">peta.html</code>, dan <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-200 font-mono text-emerald-700">tembak.html</code> agar tautan permainan terbuka otomatis.
                     </div>
                 </div>
             </div> -->
@@ -530,7 +530,7 @@
                             <h3 class="font-display font-bold text-2xl text-emerald-900">Pengenalan Huruf Hijaiyah & Iqro Jilid 1–6</h3>
                             <p class="text-slate-600 text-sm mt-1">Fokus pada makharijul huruf (tempat keluarnya huruf), panjang pendek (mad), dan kelancaran membaca huruf sambung.</p>
                         </div>
-                        <a href="game_new.html" class="inline-flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shrink-0">
+                        <a href="petualangan.html" class="inline-flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shrink-0">
                             <i class="fa-solid fa-gamepad"></i> Latihan di Petualangan Mengaji
                         </a>
                     </div>
@@ -699,7 +699,7 @@
                                 <span>15.30 – 17.00 WIB</span>
                             </div>
                             <h4 class="font-display font-bold text-base">Kelas Iqro & Petualangan Mengaji</h4>
-                            <p class="text-xs text-emerald-100 mt-1">Simak bacaan Iqro 1–6 dilanjut latihan di <em>game_new.html</em>.</p>
+                            <p class="text-xs text-emerald-100 mt-1">Simak bacaan Iqro 1–6 dilanjut latihan di <em>petualangan.html</em>.</p>
                         </div> -->
 
                         <!-- <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
@@ -847,7 +847,7 @@
                         <i id="modal-icon" class="fa-solid fa-gamepad"></i>
                     </div>
                     <div>
-                        <span id="modal-file-badge" class="text-xs font-mono bg-black/25 px-2.5 py-0.5 rounded-md">game_new.html</span>
+                        <span id="modal-file-badge" class="text-xs font-mono bg-black/25 px-2.5 py-0.5 rounded-md">petualangan.html</span>
                         <h3 id="modal-title" class="font-display font-bold text-xl sm:text-2xl mt-0.5">Judul Game</h3>
                     </div>
                 </div>
@@ -871,7 +871,7 @@
                 </div>
 
                 <div class="pt-2 flex flex-col sm:flex-row gap-3">
-                    <a id="modal-play-link" href="game_new.html" class="flex-1 inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold py-3.5 px-5 rounded-2xl shadow-md transition-colors">
+                    <a id="modal-play-link" href="petualangan.html" class="flex-1 inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold py-3.5 px-5 rounded-2xl shadow-md transition-colors">
                         <i class="fa-solid fa-play"></i> Buka & Mainkan File
                     </a>
                     <button type="button" onclick="closeGameModal()" class="sm:w-auto inline-flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-5 rounded-2xl transition-colors">
@@ -905,12 +905,12 @@
         const gameGuides = {
             petualangan: {
                 title: 'Petualangan Mengaji',
-                file: 'game_new.html',
+                file: 'petualangan.html',
                 headerClass: 'bg-emerald-600',
                 icon: 'fa-book-open-reader',
                 objective: 'Melatih santri mengenali bentuk huruf hijaiyah tunggal maupun berharakat (Fathah, Kasrah, Dhammah) serta menguji pelafalan dasar melalui kuis interaktif.',
                 steps: [
-                    'Klik tombol "Buka & Mainkan File" untuk membuka game_new.html.',
+                    'Klik tombol "Buka & Mainkan File" untuk membuka petualangan.html.',
                     'Perhatikan huruf hijaiyah atau tanda harakat yang muncul di layar.',
                     'Pilih jawaban bacaan latin yang paling tepat untuk melangkah ke level berikutnya.',
                     'Kumpulkan poin tertinggi dan laporkan ke kakak pendamping KKN untuk mendapatkan bintang!'
