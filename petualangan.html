@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Mengaji — Gerakan Mengaji Ceria TPA</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Fredoka, Poppins & Amiri (Arabic) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Fredoka:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Fredoka', 'sans-serif'],
+                        sans: ['Poppins', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        gold: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        skysoft: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                        }
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 2.5s infinite',
+                        'float': 'float 3.5s ease-in-out infinite',
+                        'shake': 'shake 0.4s cubic-bezier(.36,.07,.19,.97) both',
+                        'pop': 'pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        shake: {
+                            '10%, 90%': { transform: 'translate3d(-2px, 0, 0)' },
+                            '20%, 80%': { transform: 'translate3d(4px, 0, 0)' },
+                            '30%, 50%, 70%': { transform: 'translate3d(-6px, 0, 0)' },
+                            '40%, 60%': { transform: 'translate3d(6px, 0, 0)' }
+                        },
+                        pop: {
+                            '0%': { transform: 'scale(0.85)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(180deg, #e0f2fe 0%, #ecfdf5 60%, #d1fae5 100%);
+            min-height: 100vh;
+        }
+        
+        /* Pola Bintang Islami Halus */
+        .bg-islamic-dots {
+            background-image: radial-gradient(#10b981 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+
+        /* Tombol 3D Ramah Anak */
+        .btn-3d {
+            transition: all 0.15s ease;
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+        }
+        .btn-emerald-3d {
+            box-shadow: 0 5px 0 #047857;
+        }
+        .btn-emerald-3d:active {
+            box-shadow: 0 1px 0 #047857;
+        }
+        .btn-gold-3d {
+            box-shadow: 0 5px 0 #b45309;
+        }
+        .btn-gold-3d:active {
+            box-shadow: 0 1px 0 #b45309;
+        }
+        .btn-sky-3d {
+            box-shadow: 0 5px 0 #0369a1;
+        }
+        .btn-sky-3d:active {
+            box-shadow: 0 1px 0 #0369a1;
+        }
+        .btn-option-3d {
+            box-shadow: 0 4px 0 #cbd5e1;
+        }
+        .btn-option-3d:active:not(:disabled) {
+            box-shadow: 0 1px 0 #cbd5e1;
+        }
+
+        /* Canvas Konfeti */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 60;
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-800 bg-islamic-dots selection:bg-gold-300 selection:text-emerald-950">
+
+    <!-- Canvas Konfeti untuk Layar Kemenangan -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- =====================================================================
+         TOP BAR / HUD PERMAINAN
+    ====================================================================== -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-emerald-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            
+            <!-- Tombol Kembali ke Beranda & Judul -->
+            <div class="flex items-center gap-3">
+                <a href="index.html" inline-flex items-center gap-2 bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition-colors border border-slate-200">
+                    <i class="fa-solid fa-house text-emerald-600"></i>
+                    <span class="hidden sm:inline">Beranda</span>
+                </a>
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-600 text-gold-300 flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-book-quran"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-display font-bold text-base sm:text-lg text-emerald-900 leading-none">Petualangan Mengaji</h1>
+                        <span class="text-[11px] font-medium text-emerald-600">Gerakan Mengaji Ceria TPA</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Pemain (Nyawa, Bintang, Streak, Mute) -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Nyawa (Hati) -->
+                <div id="hud-hearts" class="hidden bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl items-center gap-1" title="Nyawa Santri">
+                    <i class="fa-solid fa-heart text-red-500 text-sm"></i>
+                    <i class="fa-solid fa-heart text-red-500 text-sm"></i>
+                    <i class="fa-solid fa-heart text-red-500 text-sm"></i>
+                </div>
+
+                <!-- Skor Bintang -->
+                <div id="hud-stars" class="hidden bg-gold-50 border border-gold-300 px-3 py-1.5 rounded-xl items-center gap-1.5" title="Bintang Terkumpul">
+                    <i class="fa-solid fa-star text-gold-500 text-sm"></i>
+                    <span id="star-count" class="font-display font-bold text-sm text-amber-900">0</span>
+                </div>
+
+                <!-- Kombo Streak -->
+                <div id="hud-streak" class="hidden bg-orange-50 border border-orange-200 px-2.5 py-1.5 rounded-xl items-center gap-1" title="Kombo Jawaban Benar">
+                    <span class="text-sm">🔥</span>
+                    <span id="streak-count" class="font-display font-bold text-xs text-orange-700">0x</span>
+                </div>
+
+                <!-- Tombol Mute / Unmute Audio -->
+                <button type="button" id="btn-mute" onclick="toggleMute()" aria-label="Suara Efek" class="w-10 h-10 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 flex items-center justify-center transition-colors">
+                    <i id="mute-icon" class="fa-solid fa-volume-high"></i>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         MAIN CONTAINER (4 LAYAR: START, ADVENTURE MAP, QUIZ STAGE, VICTORY/GAMEOVER)
+    ====================================================================== -->
+    <main class="max-w-5xl mx-auto px-4 py-6 sm:py-10">
+
+        <!-- =================================================================
+             LAYAR 1: PENDAFTARAN SANTRI & PILIH KARAKTER
+        ================================================================== -->
+        <section id="screen-start" class="animate-pop">
+            <div class="bg-white rounded-[2.5rem] border-4 border-emerald-200 shadow-xl p-6 sm:p-10 max-w-2xl mx-auto text-center relative overflow-hidden">
+                
+                <!-- Dekorasi Kubah Masjid Atas -->
+                <div class="inline-flex items-center gap-2 bg-gold-100 text-amber-900 font-display font-bold text-xs sm:text-sm px-4 py-1.5 rounded-full mb-4 border border-gold-300">
+                    ✨ Misi Menuju Masjid Cahaya
+                </div>
+
+                <h2 class="font-display font-bold text-3xl sm:text-4xl text-emerald-900 mb-3">
+                    Siap Berpetualang Mengaji?
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base mb-8 max-w-lg mx-auto">
+                    Yuk pilih karakter santri favoritmu, tulis namamu, lalu taklukkan <strong>5 Pos Belajar Al-Quran</strong> untuk meraih Sertifikat Bintang TPA!
+                </p>
+
+                <!-- Pilihan Karakter Santri -->
+                <div class="mb-6">
+                    <label class="block font-display font-bold text-sm text-emerald-800 uppercase tracking-wider mb-3">
+                        1. Pilih Karakter Santri Cilik
+                    </label>
+                    <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                        <!-- Karakter Santri Putra -->
+                        <button type="button" id="char-putra" onclick="selectCharacter('putra')" class="char-card active-char bg-emerald-50 border-4 border-emerald-500 rounded-3xl p-4 flex flex-col items-center transition-all shadow-md">
+                            <svg viewBox="0 0 120 120" class="w-24 h-24 mb-2" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="60" cy="60" r="54" fill="#D1FAE5"/>
+                                <path d="M28 110 C28 85, 92 85, 92 110 Z" fill="#10B981"/>
+                                <rect x="57" y="88" width="6" height="22" fill="#047857"/>
+                                <circle cx="60" cy="60" r="24" fill="#FDE68A"/>
+                                <path d="M36 48 C36 30, 84 30, 84 48 Z" fill="#064E3B"/>
+                                <rect x="36" y="45" width="48" height="5" rx="2" fill="#F59E0B"/>
+                                <circle cx="52" cy="58" r="3" fill="#1E293B"/>
+                                <circle cx="68" cy="58" r="3" fill="#1E293B"/>
+                                <path d="M53 68 Q60 75 67 68" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                <circle cx="46" cy="64" r="3.5" fill="#FCA5A5" opacity="0.7"/>
+                                <circle cx="74" cy="64" r="3.5" fill="#FCA5A5" opacity="0.7"/>
+                            </svg>
+                            <span class="font-display font-bold text-base text-emerald-900">Santri Putra</span>
+                            <span class="text-xs text-emerald-700 font-medium">Siap Maju!</span>
+                        </button>
+
+                        <!-- Karakter Santri Putri -->
+                        <button type="button" id="char-putri" onclick="selectCharacter('putri')" class="char-card bg-slate-50 border-4 border-slate-200 hover:border-emerald-300 rounded-3xl p-4 flex flex-col items-center transition-all">
+                            <svg viewBox="0 0 120 120" class="w-24 h-24 mb-2" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="60" cy="60" r="54" fill="#FEF3C7"/>
+                                <path d="M32 62 C32 32, 88 32, 88 62 L94 110 L26 110 Z" fill="#F59E0B"/>
+                                <path d="M38 64 C38 38, 82 38, 82 64 L85 110 L35 110 Z" fill="#FBBF24"/>
+                                <circle cx="60" cy="60" r="21" fill="#FDE68A"/>
+                                <circle cx="53" cy="58" r="3" fill="#1E293B"/>
+                                <circle cx="67" cy="58" r="3" fill="#1E293B"/>
+                                <path d="M54 68 Q60 74 66 68" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                <circle cx="47" cy="63" r="3.5" fill="#FCA5A5" opacity="0.7"/>
+                                <circle cx="73" cy="63" r="3.5" fill="#FCA5A5" opacity="0.7"/>
+                                <circle cx="60" cy="86" r="5" fill="#10B981"/>
+                            </svg>
+                            <span class="font-display font-bold text-base text-slate-800">Santri Putri</span>
+                            <span class="text-xs text-slate-500 font-medium">Semangat!</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Input Nama Santri -->
+                <div class="max-w-md mx-auto mb-8">
+                    <label for="player-name" class="block font-display font-bold text-sm text-emerald-800 uppercase tracking-wider mb-2">
+                        2. Tulis Nama Santri
+                    </label>
+                    <input type="text" id="player-name" maxlength="24" placeholder="Contoh: Aisyah / Fatih..." 
+                        class="w-full text-center font-display font-bold text-lg px-5 py-3.5 rounded-2xl bg-slate-50 border-2 border-emerald-200 focus:border-emerald-500 focus:bg-white focus:outline-none text-emerald-950 placeholder:font-sans placeholder:font-normal placeholder:text-sm">
+                </div>
+
+                <!-- Tombol Tes Suara & Status Audio -->
+                <div class="max-w-md mx-auto mb-7 bg-skysoft-50 border-2 border-skysoft-200 rounded-2xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <button type="button" id="btn-test-sound" onclick="testAudioSystem()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-skysoft-500 hover:bg-skysoft-600 text-white font-display font-bold text-sm px-4 py-2.5 rounded-xl btn-3d btn-sky-3d">
+                        <i class="fa-solid fa-volume-high"></i> 🔊 Tes Suara
+                    </button>
+                    <div id="audio-status-badge" class="inline-flex items-center gap-2 text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-xl border border-slate-200">
+                        <span id="audio-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                        <span id="audio-status-text">Klik Tes Suara untuk Cek Audio</span>
+                    </div>
+                </div>
+
+                <!-- Tombol Mulai Petualangan -->
+                <button type="button" onclick="startAdventure()" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-xl px-10 py-4 rounded-2xl btn-3d btn-emerald-3d">
+                    <i class="fa-solid fa-compass text-gold-300 text-2xl"></i>
+                    Mulai Petualangan!
+                </button>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             LAYAR 2: PETA PETUALANGAN (5 POS MENUJU MASJID CAHAYA)
+        ================================================================== -->
+        <section id="screen-map" class="hidden animate-pop">
+            <div class="bg-white rounded-[2.5rem] border-4 border-emerald-200 shadow-xl p-6 sm:p-8 relative overflow-hidden">
+                
+                <!-- Header Peta -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b-2 border-emerald-100">
+                    <div class="flex items-center gap-3.5">
+                        <div id="map-avatar-box" class="w-14 h-14 rounded-2xl bg-emerald-100 border-2 border-emerald-300 flex items-center justify-center text-2xl shrink-0">
+                            🧒
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Peta Petualangan Santri</span>
+                            <h2 class="font-display font-bold text-2xl text-emerald-950">
+                                Halo, <span id="display-player-name" class="text-emerald-600">Santri</span>!
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="bg-gold-50 border-2 border-gold-200 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold text-amber-900 flex items-center gap-2">
+                        <i class="fa-solid fa-mosque text-emerald-600 text-lg"></i>
+                        <span>Selesaikan <strong>5 Pos</strong> untuk mencapai Masjid Cahaya!</span>
+                    </div>
+                </div>
+
+                <!-- Jalur 5 Pos Petualangan -->
+                <div id="stage-nodes-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5 mb-8">
+                    <!-- Diisi secara dinamis oleh JS -->
+                </div>
+
+                <!-- Tujuan Akhir: Masjid Cahaya -->
+                <div class="bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-600 rounded-3xl p-5 sm:p-6 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
+                    <div class="flex items-center gap-4 text-center sm:text-left flex-col sm:flex-row">
+                        <div class="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center text-4xl text-gold-300 shrink-0 animate-float">
+                            <i class="fa-solid fa-mosque"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-gold-300">Tujuan Akhir Petualangan</span>
+                            <h3 class="font-display font-bold text-xl sm:text-2xl">Masjid Cahaya & Sertifikat TPA</h3>
+                            <p class="text-xs sm:text-sm text-emerald-100 mt-0.5">Kumpulkan bintang dari setiap pos untuk membuka gerbang Masjid Cahaya!</p>
+                        </div>
+                    </div>
+                    <button type="button" id="btn-continue-stage" onclick="openCurrentStage()" class="w-full sm:w-auto bg-gold-400 hover:bg-gold-500 text-emerald-950 font-display font-bold text-base px-6 py-3.5 rounded-2xl btn-3d btn-gold-3d shrink-0">
+                        Lanjut ke Pos <span id="next-stage-num">1</span> <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- =================================================================
+             LAYAR 3: ARENA KUIS INTERAKTIF PER POS
+        ================================================================== -->
+        <section id="screen-quiz" class="hidden animate-pop">
+            <div id="quiz-card-wrapper" class="bg-white rounded-[2.5rem] border-4 border-emerald-200 shadow-xl p-5 sm:p-8 max-w-3xl mx-auto">
+                
+                <!-- Header Pos & Progress Soal -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-6 border-b-2 border-slate-100">
+                    <div>
+                        <span id="quiz-stage-badge" class="inline-block bg-emerald-100 text-emerald-800 font-display font-bold text-xs px-3 py-1 rounded-full mb-1">
+                            POS 1 • GERBANG HIJAIYAH
+                        </span>
+                        <h3 id="quiz-stage-title" class="font-display font-bold text-lg sm:text-xl text-slate-800">
+                            Mengenal Huruf Hijaiyah
+                        </h3>
+                    </div>
+
+                    <!-- Indikator 3 Soal dalam 1 Pos -->
+                    <div class="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-2xl border border-slate-200">
+                        <span class="text-xs font-bold text-slate-500 mr-1">Soal:</span>
+                        <span id="q-dot-0" class="w-3.5 h-3.5 rounded-full bg-emerald-500"></span>
+                        <span id="q-dot-1" class="w-3.5 h-3.5 rounded-full bg-slate-200"></span>
+                        <span id="q-dot-2" class="w-3.5 h-3.5 rounded-full bg-slate-200"></span>
+                    </div>
+                </div>
+
+                <!-- Area Pertanyaan -->
+                <div class="bg-gradient-to-b from-skysoft-50 to-emerald-50/70 rounded-3xl border-2 border-emerald-100 p-6 sm:p-8 text-center mb-6 relative">
+                    
+                    <!-- Kategori Soal -->
+                    <span id="quiz-category-tag" class="inline-block bg-white text-emerald-700 font-bold text-xs px-3 py-1 rounded-full shadow-sm border border-emerald-100 mb-3">
+                        Tebak Huruf
+                    </span>
+
+                    <!-- Teks Pertanyaan Bahasa Indonesia -->
+                    <p id="quiz-question-text" class="font-display font-bold text-lg sm:text-2xl text-slate-800 mb-4 leading-snug">
+                        Huruf hijaiyah apakah di bawah ini?
+                    </p>
+
+                    <!-- Tampilan Kaligrafi Arab Besar -->
+                    <div id="quiz-arabic-box" class="my-4 py-4 px-6 bg-white rounded-2xl border-2 border-gold-200 inline-block shadow-sm min-w-[160px]">
+                        <span id="quiz-arabic-text" class="font-arabic text-5xl sm:text-6xl font-bold text-emerald-900 leading-relaxed" dir="rtl">
+                            بَ
+                        </span>
+                    </div>
+
+                    <!-- Tombol Dengarkan Pelafalan & Petunjuk -->
+                    <div class="mt-3 flex flex-wrap items-center justify-center gap-2.5">
+                        <button type="button" id="btn-speak" onclick="speakCurrentPrompt(true)" class="inline-flex items-center gap-2 bg-skysoft-500 hover:bg-skysoft-600 text-white font-display font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl btn-3d btn-sky-3d">
+                            <i class="fa-solid fa-volume-high"></i> 🔊 Dengarkan Pelafalan
+                        </button>
+                        <button type="button" id="btn-auto-voice" onclick="toggleAutoVoice()" class="inline-flex items-center gap-1.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-xs px-3.5 py-2.5 rounded-xl border border-emerald-300 transition-colors" title="Pelafalan otomatis saat soal baru muncul">
+                            <i id="auto-voice-icon" class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i>
+                            <span id="auto-voice-label">Suara Otomatis: ON</span>
+                        </button>
+                        <button type="button" id="btn-hint" onclick="toggleHint()" class="inline-flex items-center gap-2 bg-gold-100 hover:bg-gold-200 text-amber-900 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl border border-gold-300 transition-colors">
+                            <i class="fa-solid fa-lightbulb text-gold-600"></i> 💡 Petunjuk
+                        </button>
+                    </div>
+
+                    <!-- Kotak Petunjuk Tersembunyi -->
+                    <div id="quiz-hint-box" class="hidden mt-3 bg-gold-50 border border-gold-300 text-amber-950 text-xs sm:text-sm px-4 py-2.5 rounded-xl max-w-md mx-auto">
+                        <i class="fa-solid fa-sparkles text-gold-500 mr-1"></i> <span id="quiz-hint-text">Petunjuk akan muncul di sini.</span>
+                    </div>
+                </div>
+
+                <!-- Pilihan Jawaban (4 Opsi) -->
+                <div id="quiz-options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-6">
+                    <!-- Diisi secara dinamis oleh JS -->
+                </div>
+
+                <!-- Kotak Umpan Balik Edukatif (Setelah Menjawab) -->
+                <div id="quiz-feedback-box" class="hidden rounded-2xl p-4 sm:p-5 border-2 mb-4 animate-pop">
+                    <div class="flex items-start gap-3.5">
+                        <div id="feedback-icon" class="w-11 h-11 rounded-2xl flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 id="feedback-title" class="font-display font-bold text-lg">MasyaAllah, Benar!</h4>
+                            <p id="feedback-explanation" class="text-sm mt-1 leading-relaxed"></p>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button type="button" id="btn-next-question" onclick="nextQuestion()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-base px-6 py-3 rounded-xl btn-3d btn-emerald-3d">
+                            Lanjut <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- =================================================================
+             LAYAR 4A: KEMENANGAN & SERTIFIKAT MINI SANTRI
+        ================================================================== -->
+        <section id="screen-victory" class="hidden animate-pop">
+            <div class="bg-white rounded-[2.5rem] border-4 border-gold-400 shadow-2xl p-6 sm:p-10 max-w-2xl mx-auto text-center relative overflow-hidden">
+                
+                <div class="inline-flex items-center gap-2 bg-gold-100 text-amber-900 font-display font-bold text-xs sm:text-sm px-4 py-1.5 rounded-full mb-4 border border-gold-300">
+                    🏆 ALHAMDULILLAH • MISI SELESAI
+                </div>
+
+                <h2 class="font-display font-bold text-3xl sm:text-4xl text-emerald-900 mb-2">
+                    Selamat, <span id="victory-name" class="text-emerald-600">Santri</span>!
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base mb-6">
+                    Kamu telah berhasil menyelesaikan seluruh 5 Pos Petualangan dan tiba di <strong>Masjid Cahaya</strong>!
+                </p>
+
+                <!-- Kartu Sertifikat Mini TPA -->
+                <div class="bg-gradient-to-br from-emerald-50 via-white to-gold-50 border-4 border-double border-gold-400 rounded-3xl p-6 sm:p-8 mb-8 shadow-inner relative">
+                    <div class="text-gold-500 text-3xl mb-2">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <span class="text-xs font-bold tracking-widest uppercase text-emerald-700 block">
+                        Sertifikat Apresiasi Santri TPA
+                    </span>
+                    <h3 class="font-display font-bold text-2xl sm:text-3xl text-emerald-950 my-2" id="cert-player-name">
+                        Nama Santri
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-5">
+                        Diberikan atas keberhasilan menuntaskan pembelajaran interaktif <strong>Gerakan Mengaji Ceria</strong> (Huruf Hijaiyah, Harakat, Sambung Huruf, Tajwid Dasar & Juz Amma).
+                    </p>
+
+                    <div class="grid grid-cols-3 gap-3 max-w-md mx-auto">
+                        <div class="bg-white rounded-2xl p-3 border border-gold-200 shadow-sm">
+                            <span class="text-xs font-bold text-slate-500 block">Total Bintang</span>
+                            <span id="victory-stars" class="font-display font-bold text-xl sm:text-2xl text-gold-600">0 ⭐</span>
+                        </div>
+                        <div class="bg-white rounded-2xl p-3 border border-emerald-200 shadow-sm">
+                            <span class="text-xs font-bold text-slate-500 block">Jawaban Benar</span>
+                            <span id="victory-correct" class="font-display font-bold text-xl sm:text-2xl text-emerald-600">15/15</span>
+                        </div>
+                        <div class="bg-white rounded-2xl p-3 border border-skysoft-200 shadow-sm">
+                            <span class="text-xs font-bold text-slate-500 block">Predikat</span>
+                            <span id="victory-rank" class="font-display font-bold text-sm sm:text-base text-skysoft-600 mt-1 block">Mumtaz!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi Akhir -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button type="button" onclick="resetGame()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-base px-7 py-4 rounded-2xl btn-3d btn-emerald-3d">
+                        <i class="fa-solid fa-rotate-right"></i> Main Lagi
+                    </button>
+                    <a href="index.html" w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-400 hover:bg-gold-500 text-emerald-950 font-display font-bold text-base px-7 py-4 rounded-2xl btn-3d btn-gold-3d">
+                        <i class="fa-solid fa-house"></i> Kembali ke Beranda
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             LAYAR 4B: NYAWA HABIS (SEMANGAT BELAJAR LAGI)
+        ================================================================== -->
+        <section id="screen-gameover" class="hidden animate-pop">
+            <div class="bg-white rounded-[2.5rem] border-4 border-amber-300 shadow-xl p-6 sm:p-10 max-w-xl mx-auto text-center">
+                <div class="w-20 h-20 rounded-3xl bg-amber-100 text-amber-600 flex items-center justify-center text-4xl mx-auto mb-4">
+                    <i class="fa-solid fa-heart-crack"></i>
+                </div>
+                <h2 class="font-display font-bold text-2xl sm:text-3xl text-slate-800 mb-2">
+                    Jangan Menyerah, <span id="gameover-name" class="text-emerald-600">Santri</span>!
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base mb-6">
+                    Kesempatan hatimu habis di pos ini. Belajar mengaji memang butuh kesabaran dan latihan berulang. Yuk coba lagi, kamu pasti bisa!
+                </p>
+                <div class="bg-gold-50 border border-gold-200 rounded-2xl p-4 mb-6 inline-block px-8">
+                    <span class="text-xs font-bold text-slate-500 block">Bintang yang Sudah Dikumpulkan</span>
+                    <span id="gameover-stars" class="font-display font-bold text-2xl text-gold-600">0 ⭐</span>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button type="button" onclick="resetGame()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-base px-7 py-3.5 rounded-2xl btn-3d btn-emerald-3d">
+                        <i class="fa-solid fa-rotate-right"></i> Ulangi Petualangan
+                    </button>
+                    <a href="index.html" w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-base px-6 py-3.5 rounded-2xl">
+                        <i class="fa-solid fa-house"></i> Beranda
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =====================================================================
+         JAVASCRIPT LOGIKA GAME, WEB AUDIO API, & BANK SOAL (30 SOAL)
+    ====================================================================== -->
+    <script>
+        // =================================================================
+        // 1. SISTEM EFEK SUARA SINTETIS (WEB AUDIO API) & SPEECH SYNTHESIS ANTI-BISU
+        // =================================================================
+        let audioCtx = null;
+        let isMuted = false;
+        let autoVoiceEnabled = true;
+        let cachedVoices = [];
+        let speechKeepAliveTimer = null;
+
+        function loadVoices() {
+            if ('speechSynthesis' in window) {
+                cachedVoices = window.speechSynthesis.getVoices();
+            }
+        }
+        if ('speechSynthesis' in window) {
+            loadVoices();
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        function unlockAudioContext() {
+            try {
+                if (!audioCtx) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContextClass) {
+                        audioCtx = new AudioContextClass();
+                    }
+                }
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                if (audioCtx && audioCtx.state === 'running') {
+                    const buffer = audioCtx.createBuffer(1, 1, 22050);
+                    const source = audioCtx.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(audioCtx.destination);
+                    source.start(0);
+                    updateAudioStatusUI(true);
+                }
+            } catch (err) {
+                console.warn('AudioContext unlock warning:', err);
+            }
+        }
+
+        ['click', 'touchstart', 'keydown'].forEach(evt => {
+            document.addEventListener(evt, unlockAudioContext, { passive: true });
+        });
+
+        function updateAudioStatusUI(isActive) {
+            const dot = document.getElementById('audio-status-dot');
+            const text = document.getElementById('audio-status-text');
+            if (!dot || !text) return;
+
+            if (isMuted) {
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-red-500';
+                text.textContent = 'Mode Senyap (Mute)';
+            } else if (isActive) {
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping';
+                text.textContent = 'Suara Aktif & Siap!';
+            }
+        }
+
+        function playTone(freq, type, duration, delay = 0, volume = 0.22) {
+            if (isMuted) return;
+            unlockAudioContext();
+            if (!audioCtx) return;
+
+            try {
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now + delay);
+
+                gain.gain.setValueAtTime(0.001, now + delay);
+                gain.gain.linearRampToValueAtTime(volume, now + delay + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + delay + duration);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now + delay);
+                osc.stop(now + delay + duration + 0.02);
+            } catch (e) {
+                console.warn('Tone error:', e);
+            }
+        }
+
+        function playSoundEffect(effect) {
+            if (isMuted) return;
+            unlockAudioContext();
+            switch (effect) {
+                case 'click':
+                    playTone(580, 'sine', 0.11, 0, 0.16);
+                    break;
+                case 'chime':
+                    playTone(880, 'sine', 0.18, 0, 0.15);
+                    playTone(1174.66, 'sine', 0.25, 0.08, 0.12);
+                    break;
+                case 'correct':
+                    playTone(523.25, 'triangle', 0.15, 0, 0.24);
+                    playTone(659.25, 'triangle', 0.15, 0.1, 0.24);
+                    playTone(783.99, 'triangle', 0.18, 0.2, 0.24);
+                    playTone(1046.50, 'triangle', 0.3, 0.3, 0.26);
+                    break;
+                case 'wrong':
+                    playTone(310, 'triangle', 0.22, 0, 0.2);
+                    playTone(240, 'triangle', 0.32, 0.16, 0.2);
+                    break;
+                case 'levelup':
+                    playTone(440, 'triangle', 0.14, 0, 0.22);
+                    playTone(554.37, 'triangle', 0.14, 0.12, 0.22);
+                    playTone(659.25, 'triangle', 0.14, 0.24, 0.22);
+                    playTone(880, 'triangle', 0.38, 0.36, 0.26);
+                    break;
+                case 'victory':
+                    const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+                    const times = [0, 0.14, 0.28, 0.42, 0.62, 0.78];
+                    notes.forEach((n, idx) => playTone(n, 'triangle', 0.28, times[idx], 0.26));
+                    break;
+            }
+        }
+
+        function testAudioSystem() {
+            unlockAudioContext();
+            if (isMuted) {
+                isMuted = false;
+                document.getElementById('mute-icon').className = 'fa-solid fa-volume-high';
+            }
+            playSoundEffect('levelup');
+            updateAudioStatusUI(true);
+            speakText('Assalamualaikum, suara aktif! Siap berpetualang mengaji!', 'id-ID', 'Assalamualaikum, suara aktif! Siap berpetualang mengaji!');
+        }
+
+        function toggleMute() {
+            unlockAudioContext();
+            isMuted = !isMuted;
+            const icon = document.getElementById('mute-icon');
+            if (isMuted) {
+                icon.className = 'fa-solid fa-volume-xmark text-red-500';
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            } else {
+                icon.className = 'fa-solid fa-volume-high';
+                playSoundEffect('click');
+            }
+            updateAudioStatusUI(!isMuted);
+        }
+
+        function toggleAutoVoice() {
+            unlockAudioContext();
+            autoVoiceEnabled = !autoVoiceEnabled;
+            const label = document.getElementById('auto-voice-label');
+            const icon = document.getElementById('auto-voice-icon');
+            if (autoVoiceEnabled) {
+                label.textContent = 'Suara Otomatis: ON';
+                icon.className = 'fa-solid fa-wand-magic-sparkles text-emerald-600';
+                playSoundEffect('click');
+                speakCurrentPrompt(false);
+            } else {
+                label.textContent = 'Suara Otomatis: OFF';
+                icon.className = 'fa-solid fa-volume-off text-slate-400';
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            }
+        }
+
+        function speakText(arabicText, preferredLang = 'ar-SA', phoneticIndonesian = '') {
+            if (isMuted) return;
+            unlockAudioContext();
+
+            if (!('speechSynthesis' in window)) return;
+
+            try {
+                window.speechSynthesis.cancel();
+                if (speechKeepAliveTimer) clearInterval(speechKeepAliveTimer);
+
+                if (cachedVoices.length === 0) {
+                    cachedVoices = window.speechSynthesis.getVoices();
+                }
+
+                const arabicVoice = cachedVoices.find(v => v.lang && v.lang.toLowerCase().startsWith('ar'));
+                const indonesianVoice = cachedVoices.find(v => v.lang && (v.lang.toLowerCase().startsWith('id') || v.lang.toLowerCase().startsWith('in')));
+
+                const utterance = new SpeechSynthesisUtterance();
+                utterance.volume = 1.0;
+                utterance.rate = 0.88;
+                utterance.pitch = 1.05;
+
+                if (preferredLang.startsWith('ar') && arabicVoice) {
+                    utterance.voice = arabicVoice;
+                    utterance.lang = arabicVoice.lang;
+                    utterance.text = arabicText;
+                } else {
+                    utterance.text = phoneticIndonesian || arabicText;
+                    if (indonesianVoice) {
+                        utterance.voice = indonesianVoice;
+                        utterance.lang = indonesianVoice.lang;
+                    } else {
+                        utterance.lang = 'id-ID';
+                    }
+                }
+
+                speechKeepAliveTimer = setInterval(() => {
+                    if (!window.speechSynthesis.speaking) {
+                        clearInterval(speechKeepAliveTimer);
+                    } else {
+                        window.speechSynthesis.resume();
+                    }
+                }, 2500);
+
+                utterance.onend = () => clearInterval(speechKeepAliveTimer);
+                utterance.onerror = () => clearInterval(speechKeepAliveTimer);
+
+                window.speechSynthesis.speak(utterance);
+            } catch (err) {
+                console.warn('SpeechSynthesis error:', err);
+            }
+        }
+
+        // =================================================================
+        // 2. DATA 5 POS PETUALANGAN & BANK SOAL LENGKAP (30 SOAL)
+        // =================================================================
+        const STAGES = [
+            {
+                id: 0,
+                badge: 'POS 1',
+                title: 'Gerbang Huruf Hijaiyah',
+                shortTitle: 'Huruf Hijaiyah',
+                subtitle: 'Mengenal bentuk & titik huruf',
+                icon: 'fa-font',
+                color: 'emerald'
+            },
+            {
+                id: 1,
+                badge: 'POS 2',
+                title: 'Lembah Harakat',
+                shortTitle: 'Tanda Harakat',
+                subtitle: 'Fathah, Kasrah, Dhammah & Tanwin',
+                icon: 'fa-wand-sparkles',
+                color: 'skysoft'
+            },
+            {
+                id: 2,
+                badge: 'POS 3',
+                title: 'Taman Sambung Huruf',
+                shortTitle: 'Sambung Huruf',
+                subtitle: 'Membaca kata dasar Al-Quran',
+                icon: 'fa-book-open',
+                color: 'amber'
+            },
+            {
+                id: 3,
+                badge: 'POS 4',
+                title: 'Jembatan Tajwid Dasar',
+                shortTitle: 'Tajwid Dasar',
+                subtitle: 'Mad, Idzhar, Iqlab & Qalqalah',
+                icon: 'fa-bridge',
+                color: 'teal'
+            },
+            {
+                id: 4,
+                badge: 'POS 5',
+                title: 'Menara Juz Amma & Doa',
+                shortTitle: 'Juz Amma & Doa',
+                subtitle: 'Hafalan surat pendek & doa harian',
+                icon: 'fa-mosque',
+                color: 'gold'
+            }
+        ];
+
+        const QUESTION_BANK = {
+            // POS 1: GERBANG HURUF HIJAIYAH
+            0: [
+                {
+                    category: 'Kenali Huruf Hijaiyah',
+                    question: 'Huruf hijaiyah yang memiliki satu titik di bawah adalah...',
+                    arabic: 'ب',
+                    speak: 'باء',
+                    phoneticId: 'Huruf Ba, memiliki satu titik di bawah',
+                    hint: 'Bentuknya seperti perahu dengan satu titik di bagian bawah.',
+                    options: ['Ba (ب)', 'Ta (ت)', 'Tsa (ث)', 'Nun (ن)'],
+                    answer: 0,
+                    explanation: 'Huruf Ba (ب) berbentuk lengkung seperti perahu dengan satu titik tepat di bawahnya.'
+                },
+                {
+                    category: 'Kenali Huruf Hijaiyah',
+                    question: 'Apakah nama huruf hijaiyah dengan tiga titik di atas ini?',
+                    arabic: 'ث',
+                    speak: 'ثاء',
+                    phoneticId: 'Huruf Tsa, memiliki tiga titik di atas',
+                    hint: 'Bunyinya dilafalkan lembut dengan ujung lidah menyentuh ujung gigi seri atas.',
+                    options: ['Ta (ت)', 'Tsa (ث)', 'Syin (ش)', 'Jim (ج)'],
+                    answer: 1,
+                    explanation: 'Huruf Tsa (ث) memiliki tiga titik di atas lengkungannya.'
+                },
+                {
+                    category: 'Kenali Huruf Hijaiyah',
+                    question: 'Huruf apakah yang berdiri tegak lurus seperti angka satu ini?',
+                    arabic: 'ا',
+                    speak: 'ألف',
+                    phoneticId: 'Huruf Alif, berdiri tegak lurus',
+                    hint: 'Ini adalah huruf pertama dalam urutan huruf hijaiyah.',
+                    options: ['Lam (ل)', 'Kaf (ك)', 'Alif (ا)', 'Wawu (و)'],
+                    answer: 2,
+                    explanation: 'Alif (ا) adalah huruf pertama dalam abjad hijaiyah yang bentuknya tegak lurus.'
+                },
+                {
+                    category: 'Kenali Huruf Hijaiyah',
+                    question: 'Perhatikan titik di tengah perut huruf ini. Huruf apakah ini?',
+                    arabic: 'ج',
+                    speak: 'جيم',
+                    phoneticId: 'Huruf Jim, memiliki satu titik di tengah perutnya',
+                    hint: 'Saudaranya adalah Ha (ح) yang tanpa titik dan Kha (خ) yang bertitik di atas.',
+                    options: ['Ha (ح)', 'Kha (خ)', 'Jim (ج)', 'Ain (ع)'],
+                    answer: 2,
+                    explanation: 'Huruf Jim (ج) memiliki satu titik di dalam lengkungan perutnya.'
+                },
+                {
+                    category: 'Kenali Huruf Hijaiyah',
+                    question: 'Huruf hijaiyah yang memiliki tiga gigi dan tiga titik di atas adalah...',
+                    arabic: 'ش',
+                    speak: 'شين',
+                    phoneticId: 'Huruf Syin, memiliki tiga gigi dan tiga titik di atas',
+                    hint: 'Jika tanpa titik dibaca Sin (س), jika bertitik tiga dibaca...',
+                    options: ['Sin (س)', 'Syin (ش)', 'Shad (ص)', 'Dhad (ض)'],
+                    answer: 1,
+                    explanation: 'Syin (ش) memiliki tiga titik di atasnya, membedakannya dari Sin (س).'
+                },
+                {
+                    category: 'Kenali Huruf Hijaiyah',
+                    question: 'Huruf apakah yang berbentuk bulat di atas dengan dua titik di atasnya ini?',
+                    arabic: 'ق',
+                    speak: 'قاف',
+                    phoneticId: 'Huruf Qaf, bertitik dua di atas',
+                    hint: 'Bunyinya keluar dari pangkal lidah dan bertitik dua di atas.',
+                    options: ['Fa (ف)', 'Qaf (ق)', 'Kaf (ك)', 'Wawu (و)'],
+                    answer: 1,
+                    explanation: 'Huruf Qaf (ق) memiliki dua titik di atas kepalanya dan mangkuk bulat di bawah.'
+                }
+            ],
+
+            // POS 2: LEMBAH HARAKAT
+            1: [
+                {
+                    category: 'Tanda Baca Harakat',
+                    question: 'Bagaimana cara membaca huruf berikut ini?',
+                    arabic: 'كُ',
+                    speak: 'كُ',
+                    phoneticId: 'Huruf Kaf berharakat Dhammah, dibaca Ku',
+                    hint: 'Tanda seperti huruf wawu kecil di atas huruf berbunyi vokal "U".',
+                    options: ['Ka', 'Ki', 'Ku', 'Kun'],
+                    answer: 2,
+                    explanation: 'Harakat Dhammah (ـُ) di atas huruf Kaf membuat bunyinya menjadi "Ku".'
+                },
+                {
+                    category: 'Tanda Baca Harakat',
+                    question: 'Tanda garis miring di bawah huruf ( ـِ ) disebut harakat...',
+                    arabic: 'مِ',
+                    speak: 'مِ',
+                    phoneticId: 'Huruf Mim berharakat Kasrah di bawah, dibaca Mi',
+                    hint: 'Harakat ini menghasilkan bunyi vokal "I" seperti pada kata "Mi".',
+                    options: ['Fathah', 'Kasrah', 'Dhammah', 'Sukun'],
+                    answer: 1,
+                    explanation: 'Kasrah adalah garis miring di bawah huruf yang berbunyi "I", sehingga مِ dibaca "Mi".'
+                },
+                {
+                    category: 'Tanda Baca Tanwin',
+                    question: 'Bagaimana bunyi bacaan huruf yang bertanda Fathatain ini?',
+                    arabic: 'بًا',
+                    speak: 'بًا',
+                    phoneticId: 'Huruf Ba berharakat Fathatain, dibaca Ban',
+                    hint: 'Dua garis di atas menghasilkan bunyi akhiran "-an".',
+                    options: ['Ba', 'Ban', 'Bin', 'Bun'],
+                    answer: 1,
+                    explanation: 'Fathatain (ـً) berbunyi "-an", maka بًا dibaca "Ban".'
+                },
+                {
+                    category: 'Tanda Baca Tanwin',
+                    question: 'Huruf Sin dengan tanda Kasratain di bawahnya ini dibaca...',
+                    arabic: 'سٍ',
+                    speak: 'سٍ',
+                    phoneticId: 'Huruf Sin berharakat Kasratain di bawah, dibaca Sin',
+                    hint: 'Dua garis miring di bawah berbunyi akhiran "-in".',
+                    options: ['San', 'Sin', 'Sun', 'Si'],
+                    answer: 1,
+                    explanation: 'Kasratain (ـٍ) menghasilkan bunyi "-in", sehingga سٍ dibaca "Sin".'
+                },
+                {
+                    category: 'Tanda Baca Harakat',
+                    question: 'Bagaimana cara membaca huruf Lam berharakat Fathah ini?',
+                    arabic: 'لَ',
+                    speak: 'لَ',
+                    phoneticId: 'Huruf Lam berharakat Fathah di atas, dibaca La',
+                    hint: 'Garis miring di atas huruf menghasilkan bunyi vokal "A".',
+                    options: ['La', 'Li', 'Lu', 'Lan'],
+                    answer: 0,
+                    explanation: 'Fathah (ـَ) berada di atas huruf dan berbunyi "A", sehingga لَ dibaca "La".'
+                },
+                {
+                    category: 'Tanda Baca Tanwin',
+                    question: 'Tanda Dhammatain (ـٌ) pada huruf Dal berikut ini dibaca...',
+                    arabic: 'دٌ',
+                    speak: 'دٌ',
+                    phoneticId: 'Huruf Dal berharakat Dhammatain, dibaca Dun',
+                    hint: 'Tanda tanwin dhammah menghasilkan bunyi akhiran "-un".',
+                    options: ['Dan', 'Din', 'Dun', 'Du'],
+                    answer: 2,
+                    explanation: 'Dhammatain (ـٌ) berbunyi "-un", maka دٌ dibaca "Dun".'
+                }
+            ],
+
+            // POS 3: TAMAN SAMBUNG HURUF
+            2: [
+                {
+                    category: 'Baca Kata Sambung',
+                    question: 'Bacalah kata sambung berharakat di bawah ini dengan teliti!',
+                    arabic: 'كَتَبَ',
+                    speak: 'كَتَبَ',
+                    phoneticId: 'Kata sambung tiga huruf fathah: Ka, Ta, Ba. Kataba',
+                    hint: 'Terdiri dari huruf Kaf (Ka), Ta (Ta), dan Ba (Ba).',
+                    options: ['Ka - Ta - Ba', 'Ka - Ba - Ta', 'Ta - Ka - Ba', 'Ba - Ta - Ka'],
+                    answer: 0,
+                    explanation: 'كَتَبَ (Kataba) terdiri dari tiga huruf berharakat fathah: Ka - Ta - Ba.'
+                },
+                {
+                    category: 'Baca Kata Sambung',
+                    question: 'Bagaimana bunyi bacaan kata Arab berikut ini?',
+                    arabic: 'قَرَأَ',
+                    speak: 'قَرَأَ',
+                    phoneticId: 'Kata Arab berharakat fathah: Qa, Ra, A. Qara-a',
+                    hint: 'Artinya "Dia telah membaca", terdiri dari Qaf, Ra, dan Alif hamzah.',
+                    options: ['Qa - Ra - A', 'Fa - Ra - A', 'Qa - Za - A', 'Ka - Ra - A'],
+                    answer: 0,
+                    explanation: 'قَرَأَ dibaca "Qa - Ra - A" yang berarti membaca.'
+                },
+                {
+                    category: 'Baca Kata Sambung',
+                    question: 'Perhatikan harakat di setiap hurufnya! Kata ini dibaca...',
+                    arabic: 'عَلِمَ',
+                    speak: 'عَلِمَ',
+                    phoneticId: 'Kata sambung dengan kasrah di tengah: A, Li, Ma. Alima',
+                    hint: 'Huruf pertama Ain (A), kedua Lam kasrah (Li), ketiga Mim (Ma).',
+                    options: ['A - La - Ma', 'A - Li - Ma', 'A - Lu - Ma', 'Gha - Li - Ma'],
+                    answer: 1,
+                    explanation: 'عَلِمَ dibaca "A - Li - Ma" karena huruf Lam berharakat kasrah (Li).'
+                },
+                {
+                    category: 'Baca Kata Sambung',
+                    question: 'Bacalah kata yang terdiri dari huruf Syin, Kaf, dan Ra ini:',
+                    arabic: 'شَكَرَ',
+                    speak: 'شَكَرَ',
+                    phoneticId: 'Kata sambung: Sya, Ka, Ra. Syakara',
+                    hint: 'Huruf pertamanya memiliki tiga titik di atas (Sya).',
+                    options: ['Sa - Ka - Ra', 'Sya - Ka - Ra', 'Sya - La - Ra', 'Sa - La - Ma'],
+                    answer: 1,
+                    explanation: 'شَكَرَ dibaca "Sya - Ka - Ra" yang berarti bersyukur.'
+                },
+                {
+                    category: 'Baca Kata Sambung',
+                    question: 'Kata berikut ini terdiri dari huruf Ba, Lam, dan Dal tanwin. Bacanya adalah...',
+                    arabic: 'بَلَدٌ',
+                    speak: 'بَلَدٌ',
+                    phoneticId: 'Kata sambung diakhiri dhammatain: Ba, La, Dun. Baladun',
+                    hint: 'Huruf terakhirnya berharakat Dhammatain (-dun).',
+                    options: ['Ba - La - Dan', 'Ba - La - Din', 'Ba - La - Dun', 'Ba - Li - Dun'],
+                    answer: 2,
+                    explanation: 'بَلَدٌ dibaca "Ba - La - Dun" (artinya negeri/kota).'
+                },
+                {
+                    category: 'Baca Kata Sambung',
+                    question: 'Bagaimana cara membaca kata berharakat lengkap ini?',
+                    arabic: 'رَسُولٌ',
+                    speak: 'رَسُولٌ',
+                    phoneticId: 'Kata sambung dengan mad wawu: Ra, Suu, Lun. Rasuulun',
+                    hint: 'Huruf Sin dibaca panjang (Suu) karena diikuti Wawu sukun.',
+                    options: ['Ra - Suu - Lun', 'Ra - Saa - Lun', 'Ra - Sii - Lun', 'Za - Suu - Lun'],
+                    answer: 0,
+                    explanation: 'رَسُولٌ dibaca "Ra - Suu - Lun" (Utusan Allah).'
+                }
+            ],
+
+            // POS 4: JEMBATAN TAJWID DASAR
+            3: [
+                {
+                    category: 'Hukum Mad Thabi’i',
+                    question: 'Berapa harakat (ketukan) panjang bacaan Mad Thabi’i (Mad Asli)?',
+                    arabic: 'قَالَ',
+                    speak: 'قَالَ',
+                    phoneticId: 'Contoh Mad Thabii: Qaala, dibaca panjang dua ketukan',
+                    hint: 'Panjangnya sama dengan satu ayunan jari (dua ketukan).',
+                    options: ['1 Harakat', '2 Harakat', '4 Harakat', '6 Harakat'],
+                    answer: 1,
+                    explanation: 'Mad Thabi’i dibaca panjang 2 harakat (1 alif), seperti pada kata قَالَ (Qaala).'
+                },
+                {
+                    category: 'Hukum Nun Sukun',
+                    question: 'Jika Nun Sukun (نْ) bertemu huruf Kha (خ), hukum bacaannya adalah...',
+                    arabic: 'مِنْ خَوْفٍ',
+                    speak: 'مِنْ خَوْفٍ',
+                    phoneticId: 'Min khaufin, Nun sukun bertemu huruf Kha, dibaca jelas',
+                    hint: 'Huruf Kha termasuk huruf tenggorokan (Halqi) yang dibaca jelas tanpa dengung.',
+                    options: ['Idzhar Halqi (Jelas)', 'Idgham Bighunnah', 'Iqlab', 'Qalqalah'],
+                    answer: 0,
+                    explanation: 'Idzhar Halqi artinya dibaca jelas karena Nun Sukun bertemu salah satu huruf tenggorokan (ا ح خ ع غ هـ).'
+                },
+                {
+                    category: 'Hukum Qalqalah',
+                    question: 'Manakah di bawah ini yang merupakan kumpulan huruf Qalqalah (memantul)?',
+                    arabic: 'قُطْبُ جَدٍّ',
+                    speak: 'قُطْبُ جَدٍّ',
+                    phoneticId: 'Quthbu Jaddin: Qaf, Tha, Ba, Jim, Dal, huruf yang memantul',
+                    hint: 'Sering disingkat agar mudah dihafal: Ba - Ju - Di - Tho - Qo.',
+                    options: ['ب ج د ط ق', 'ي ن م و', 'ا ح خ ع غ هـ', 'ل ر'],
+                    answer: 0,
+                    explanation: 'Huruf Qalqalah ada 5, yaitu: Qaf (ق), Tha (ط), Ba (ب), Jim (ج), dan Dal (د).'
+                },
+                {
+                    category: 'Hukum Iqlab',
+                    question: 'Apabila Nun Sukun (نْ) bertemu huruf Ba (ب), bunyi "N" berubah menjadi "M". Hukum ini disebut...',
+                    arabic: 'مِنْ بَعْدِ',
+                    speak: 'مِنْ بَعْدِ',
+                    phoneticId: 'Mim ba-di, Nun sukun bertemu huruf Ba berubah menjadi bunyi Mim',
+                    hint: 'Huruf Iqlab hanya ada satu, yaitu huruf Ba (ب).',
+                    options: ['Idzhar', 'Iqlab', 'Idgham Bilaghunnah', 'Mad Wajib'],
+                    answer: 1,
+                    explanation: 'Iqlab artinya membalikkan bunyi Nun Sukun/Tanwin menjadi Mim (م) disertai dengung saat bertemu huruf Ba (ب).'
+                },
+                {
+                    category: 'Hukum Idgham',
+                    question: 'Nun Sukun (نْ) bertemu huruf Wawu (و) dibaca masuk dengan mendengung. Hukum ini bernama...',
+                    arabic: 'مِنْ وَرَائِهِمْ',
+                    speak: 'مِنْ وَرَائِهِمْ',
+                    phoneticId: 'Miw wara-ihim, Nun sukun bertemu huruf Wawu dibaca masuk dan mendengung',
+                    hint: 'Hurufnya tergabung dalam kata "Yanmu" (ي ن م و).',
+                    options: ['Idgham Bighunnah', 'Idgham Bilaghunnah', 'Idzhar Halqi', 'Iqlab'],
+                    answer: 0,
+                    explanation: 'Idgham Bighunnah terjadi jika Nun Sukun/Tanwin bertemu huruf ي ن م و (dibaca masuk dan mendengung).'
+                },
+                {
+                    category: 'Hukum Ghunnah',
+                    question: 'Setiap huruf Mim atau Nun yang bertasydid (مّ / نّ) wajib dibaca mendengung selama...',
+                    arabic: 'إِنَّا',
+                    speak: 'إِنَّا',
+                    phoneticId: 'Innaa, huruf Nun bertasydid wajib dibaca mendengung dua harakat',
+                    hint: 'Ditahan dengungnya sebanyak 2 harakat.',
+                    options: ['Tidak mendengung', '2 Harakat (Ghunnah)', '5 Harakat', 'Dipantulkan'],
+                    answer: 1,
+                    explanation: 'Mim bertasydid dan Nun bertasydid adalah bacaan Ghunnah Musyaddadah yang wajib didengungkan 2 harakat.'
+                }
+            ],
+
+            // POS 5: MENARA JUZ AMMA & DOA HARIAN
+            4: [
+                {
+                    category: 'Hafalan Juz Amma',
+                    question: 'Lanjutkan ayat pertama dari Surat Al-Ikhlas berikut ini: "قُلْ هُوَ اللَّهُ ..."',
+                    arabic: 'قُلْ هُوَ اللَّهُ ...',
+                    speak: 'قُلْ هُوَ اللَّهُ أَحَدٌ',
+                    phoneticId: 'Qul huwallaahu ahad. Katakanlah Dialah Allah Yang Maha Esa',
+                    hint: 'Artinya: "Katakanlah (Muhammad), Dialah Allah, Yang Maha Esa."',
+                    options: ['أَحَدٌ (Ahad)', 'الصَّمَدُ (Ash-Shamad)', 'يُولَدْ (Yuulad)', 'الْكَوْثَرَ (Al-Kautsar)'],
+                    answer: 0,
+                    explanation: 'Ayat pertama QS. Al-Ikhlas adalah: قُلْ هُوَ اللَّهُ أَحَدٌ (Qul huwallaahu ahad).'
+                },
+                {
+                    category: 'Hafalan Juz Amma',
+                    question: 'Lanjutkan potongan ayat dari Surat Al-Kautsar berikut ini: "إِنَّا أَعْطَيْنَاكَ ..."',
+                    arabic: 'إِنَّا أَعْطَيْنَاكَ ...',
+                    speak: 'إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ',
+                    phoneticId: 'Innaa a-thainaakal kautsar. Sungguh Kami telah memberimu nikmat yang banyak',
+                    hint: 'Sesuai dengan nama suratnya yang berarti nikmat yang banyak.',
+                    options: ['الْكَوْثَرَ (Al-Kautsar)', 'الْأَبْتَرُ (Al-Abtar)', 'النَّاسِ (An-Naas)', 'الْفَلَقِ (Al-Falaq)'],
+                    answer: 0,
+                    explanation: 'Ayat pertama QS. Al-Kautsar berbunyi: إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ.'
+                },
+                {
+                    category: 'Doa Sehari-hari',
+                    question: 'Doa "رَبِّ زِدْنِي عِلْمًا وَارْزُقْنِي فَهْمًا" dibaca ketika santri hendak...',
+                    arabic: 'رَبِّ زِدْنِي عِلْمًا وَارْزُقْنِي فَهْمًا',
+                    speak: 'رَبِّ زِدْنِي عِلْمًا وَارْزُقْنِي فَهْمًا',
+                    phoneticId: 'Rabbi zidnii ilman warzuqnii fahmaa. Ya Rabbku tambahkanlah kepadaku ilmu dan pemahaman',
+                    hint: 'Artinya: "Ya Rabbku, tambahkanlah kepadaku ilmu dan berilah aku pemahaman."',
+                    options: ['Sebelum Belajar / Mengaji', 'Hendak Tidur', 'Keluar Rumah', 'Sesudah Makan'],
+                    answer: 0,
+                    explanation: 'Doa tersebut adalah doa memohon tambahan ilmu dan pemahaman sebelum mulai belajar atau mengaji.'
+                },
+                {
+                    category: 'Hafalan Juz Amma',
+                    question: 'Surat di dalam Al-Quran yang menjadi pembuka (Ummul Kitab) dan wajib dibaca saat shalat adalah...',
+                    arabic: 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ',
+                    speak: 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ',
+                    phoneticId: 'Alhamdulillaahi rabbil aalamiin. Segala puji bagi Allah Tuhan semesta alam',
+                    hint: 'Terdiri dari 7 ayat dan berarti "Pembukaan".',
+                    options: ['QS. Al-Fatihah', 'QS. An-Nas', 'QS. Al-Falaq', 'QS. Al-Asr'],
+                    answer: 0,
+                    explanation: 'QS. Al-Fatihah terdiri dari 7 ayat dan merupakan rukun bacaan dalam setiap shalat.'
+                },
+                {
+                    category: 'Doa Sehari-hari',
+                    question: 'Bacaan doa yang diucapkan sebelum makan adalah...',
+                    arabic: 'اَللّٰهُمَّ بَارِكْ لَنَا فِيْمَا رَزَقْتَنَا وَقِنَا عَذَابَ النَّارِ',
+                    speak: 'اللهم بارك لنا فيما رزقتنا وقنا عذاب النار',
+                    phoneticId: 'Allaahumma baarik lanaa fiimaa razaqtanaa waqinaa adzaabannaar',
+                    hint: 'Memohon keberkahan atas rezeki makanan yang diberikan Allah.',
+                    options: ['Doa Sebelum Makan', 'Doa Masuk Masjid', 'Doa Bangun Tidur', 'Doa Naik Kendaraan'],
+                    answer: 0,
+                    explanation: 'Allaahumma baarik lanaa fiimaa razaqtanaa waqinaa adzaabannaar adalah doa sebelum makan.'
+                },
+                {
+                    category: 'Hafalan Juz Amma',
+                    question: 'Ayat terakhir dari Surat An-Nas berbunyi: "مِنَ الْجِنَّةِ وَ..."',
+                    arabic: 'مِنَ الْجِنَّةِ وَ...',
+                    speak: 'مِنَ الْجِنَّةِ وَالنَّاسِ',
+                    phoneticId: 'Minal jinnati wannaas. Dari golongan jin dan manusia',
+                    hint: 'Artinya: "dari (golongan) jin dan manusia."',
+                    options: ['النَّاسِ (Wan-Naas)', 'الْفَلَقِ (Wal-Falaq)', 'الْعَصْرِ (Wal-Asr)', 'الْكَوْثَرِ (Wal-Kautsar)'],
+                    answer: 0,
+                    explanation: 'Ayat ke-6 QS. An-Nas ditutup dengan lafaz: مِنَ الْجِنَّةِ وَالنَّاسِ.'
+                }
+            ]
+        };
+
+        // =================================================================
+        // 3. STATE PERMAINAN & INISIALISASI
+        // =================================================================
+        let gameState = {
+            character: 'putra',
+            playerName: 'Santri Cilik',
+            currentStage: 0,
+            completedStages: [],
+            stars: 0,
+            hearts: 3,
+            streak: 0,
+            totalCorrect: 0,
+            totalAnswered: 0,
+            stageQuestions: [],
+            currentQIndex: 0,
+            answeredCurrent: false
+        };
+
+        function showScreen(screenId) {
+            const screens = ['screen-start', 'screen-map', 'screen-quiz', 'screen-victory', 'screen-gameover'];
+            screens.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            const target = document.getElementById(screenId);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+
+            // Tampilkan HUD hanya saat di dalam peta atau arena kuis
+            const showHud = screenId === 'screen-map' || screenId === 'screen-quiz';
+            ['hud-hearts', 'hud-stars', 'hud-streak'].forEach(hudId => {
+                const hudEl = document.getElementById(hudId);
+                if (hudEl) {
+                    if (showHud) {
+                        hudEl.classList.remove('hidden');
+                        hudEl.classList.add('flex');
+                    } else {
+                        hudEl.classList.add('hidden');
+                        hudEl.classList.remove('flex');
+                    }
+                }
+            });
+        }
+
+        function selectCharacter(type) {
+            playSoundEffect('click');
+            gameState.character = type;
+
+            const putraCard = document.getElementById('char-putra');
+            const putriCard = document.getElementById('char-putri');
+
+            if (type === 'putra') {
+                putraCard.className = 'char-card active-char bg-emerald-50 border-4 border-emerald-500 rounded-3xl p-4 flex flex-col items-center transition-all shadow-md';
+                putriCard.className = 'char-card bg-slate-50 border-4 border-slate-200 hover:border-emerald-300 rounded-3xl p-4 flex flex-col items-center transition-all';
+            } else {
+                putriCard.className = 'char-card active-char bg-amber-50 border-4 border-amber-500 rounded-3xl p-4 flex flex-col items-center transition-all shadow-md';
+                putraCard.className = 'char-card bg-slate-50 border-4 border-slate-200 hover:border-emerald-300 rounded-3xl p-4 flex flex-col items-center transition-all';
+            }
+        }
+
+        function updateHUD() {
+            // Render nyawa (3 hati)
+            const heartsContainer = document.getElementById('hud-hearts');
+            if (heartsContainer) {
+                let heartsHTML = '';
+                for (let i = 0; i < 3; i++) {
+                    if (i < gameState.hearts) {
+                        heartsHTML += '<i class="fa-solid fa-heart text-red-500 text-sm"></i>';
+                    } else {
+                        heartsHTML += '<i class="fa-regular fa-heart text-slate-300 text-sm"></i>';
+                    }
+                }
+                heartsContainer.innerHTML = heartsHTML;
+            }
+
+            // Render bintang & streak
+            const starEl = document.getElementById('star-count');
+            const streakEl = document.getElementById('streak-count');
+            if (starEl) starEl.textContent = gameState.stars;
+            if (streakEl) streakEl.textContent = `${gameState.streak}x`;
+        }
+
+        // =================================================================
+        // 4. MULAI PETUALANGAN & RENDER PETA 5 POS
+        // =================================================================
+        function startAdventure() {
+            unlockAudioContext();
+            playSoundEffect('levelup');
+
+            const inputEl = document.getElementById('player-name');
+            const rawName = inputEl ? inputEl.value.trim() : '';
+            gameState.playerName = rawName.length > 0 ? rawName : (gameState.character === 'putra' ? 'Santri Putra' : 'Santri Putri');
+
+            // Reset progress permainan baru
+            gameState.currentStage = 0;
+            gameState.completedStages = [];
+            gameState.stars = 0;
+            gameState.hearts = 3;
+            gameState.streak = 0;
+            gameState.totalCorrect = 0;
+            gameState.totalAnswered = 0;
+
+            updateHUD();
+            renderAdventureMap();
+            showScreen('screen-map');
+        }
+
+        function renderAdventureMap() {
+            document.getElementById('display-player-name').textContent = gameState.playerName;
+            document.getElementById('next-stage-num').textContent = gameState.currentStage + 1;
+
+            const avatarBox = document.getElementById('map-avatar-box');
+            avatarBox.innerHTML = gameState.character === 'putra'
+                ? '<i class="fa-solid fa-child text-emerald-700"></i>'
+                : '<i class="fa-solid fa-child-dress text-amber-600"></i>';
+
+            const container = document.getElementById('stage-nodes-container');
+            container.innerHTML = STAGES.map((stage, idx) => {
+                const isCompleted = gameState.completedStages.includes(idx);
+                const isCurrent = idx === gameState.currentStage;
+                const isLocked = !isCompleted && !isCurrent;
+
+                let cardStyle = 'bg-slate-50 border-slate-200 opacity-75';
+                let badgeStyle = 'bg-slate-200 text-slate-600';
+                let iconBg = 'bg-slate-200 text-slate-500';
+                let statusHTML = '<span class="text-xs font-bold text-slate-400"><i class="fa-solid fa-lock mr-1"></i> Terkunci</span>';
+                let clickAttr = '';
+
+                if (isCompleted) {
+                    cardStyle = 'bg-emerald-50 border-emerald-400 shadow-sm';
+                    badgeStyle = 'bg-emerald-600 text-white';
+                    iconBg = 'bg-emerald-500 text-white';
+                    statusHTML = '<span class="text-xs font-bold text-emerald-700"><i class="fa-solid fa-circle-check mr-1"></i> Selesai ⭐</span>';
+                } else if (isCurrent) {
+                    cardStyle = 'bg-gold-50 border-gold-400 shadow-md ring-4 ring-gold-200/70 cursor-pointer hover:-translate-y-1';
+                    badgeStyle = 'bg-gold-500 text-emerald-950';
+                    iconBg = 'bg-emerald-600 text-gold-300 animate-bounce-slow';
+                    statusHTML = '<span class="text-xs font-bold text-amber-800"><i class="fa-solid fa-play mr-1"></i> Mainkan Sekarang!</span>';
+                    clickAttr = `onclick="openCurrentStage()"`;
+                }
+
+                return `
+                    <div ${clickAttr} class="rounded-3xl border-3 border-2 p-4 flex flex-col justify-between transition-all ${cardStyle}">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="font-display font-bold text-xs px-2.5 py-1 rounded-full ${badgeStyle}">
+                                    ${stage.badge}
+                                </span>
+                                <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-lg ${iconBg}">
+                                    <i class="fa-solid ${stage.icon}"></i>
+                                </div>
+                            </div>
+                            <h3 class="font-display font-bold text-base text-slate-800 leading-snug mb-1">
+                                ${stage.shortTitle}
+                            </h3>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-4">
+                                ${stage.subtitle}
+                            </p>
+                        </div>
+                        <div class="pt-2.5 border-t border-slate-200/70">
+                            ${statusHTML}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // =================================================================
+        // 5. BUKA POS & ACAK 3 SOAL PER POS
+        // =================================================================
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function openCurrentStage() {
+            unlockAudioContext();
+            playSoundEffect('click');
+
+            const stageIdx = gameState.currentStage;
+            const stagePool = QUESTION_BANK[stageIdx] || QUESTION_BANK[0];
+            gameState.stageQuestions = shuffleArray(stagePool).slice(0, 3);
+            gameState.currentQIndex = 0;
+
+            showScreen('screen-quiz');
+            renderQuestion();
+        }
+
+        // =================================================================
+        // 6. RENDER PERTANYAAN & VALIDASI JAWABAN
+        // =================================================================
+        function renderQuestion() {
+            gameState.answeredCurrent = false;
+            const stage = STAGES[gameState.currentStage];
+            const qData = gameState.stageQuestions[gameState.currentQIndex];
+
+            document.getElementById('quiz-stage-badge').textContent = `${stage.badge} • ${stage.shortTitle.toUpperCase()}`;
+            document.getElementById('quiz-stage-title').textContent = stage.title;
+            document.getElementById('quiz-category-tag').textContent = qData.category;
+            document.getElementById('quiz-question-text').textContent = qData.question;
+            document.getElementById('quiz-arabic-text').textContent = qData.arabic;
+            document.getElementById('quiz-hint-text').textContent = qData.hint;
+
+            // Sembunyikan petunjuk & feedback dari soal sebelumnya
+            document.getElementById('quiz-hint-box').classList.add('hidden');
+            document.getElementById('quiz-feedback-box').classList.add('hidden');
+
+            // Update 3 titik progres soal
+            for (let i = 0; i < 3; i++) {
+                const dot = document.getElementById(`q-dot-${i}`);
+                if (i < gameState.currentQIndex) {
+                    dot.className = 'w-3.5 h-3.5 rounded-full bg-gold-400';
+                } else if (i === gameState.currentQIndex) {
+                    dot.className = 'w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2 ring-emerald-200';
+                } else {
+                    dot.className = 'w-3.5 h-3.5 rounded-full bg-slate-200';
+                }
+            }
+
+            // Render 4 tombol pilihan jawaban
+            const letters = ['A', 'B', 'C', 'D'];
+            const optionsGrid = document.getElementById('quiz-options-grid');
+            optionsGrid.innerHTML = qData.options.map((opt, idx) => `
+                <button type="button" id="opt-btn-${idx}" onclick="submitAnswer(${idx})" class="opt-btn btn-3d btn-option-3d bg-white hover:bg-emerald-50 border-2 border-slate-200 hover:border-emerald-400 rounded-2xl p-4 text-left flex items-center gap-3.5 transition-all">
+                    <span class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 font-display font-bold text-sm flex items-center justify-center shrink-0">
+                        ${letters[idx]}
+                    </span>
+                    <span class="font-display font-semibold text-base sm:text-lg text-slate-800">
+                        ${opt}
+                    </span>
+                </button>
+            `).join('');
+
+            // Bacakan pelafalan secara otomatis saat soal baru muncul
+            if (autoVoiceEnabled && !isMuted) {
+                setTimeout(() => {
+                    speakCurrentPrompt(false);
+                }, 250);
+            }
+        }
+
+        function speakCurrentPrompt(playChimeFirst = true) {
+            unlockAudioContext();
+            if (playChimeFirst) {
+                playSoundEffect('chime');
+            }
+            const qData = gameState.stageQuestions[gameState.currentQIndex];
+            if (qData) {
+                speakText(qData.speak || qData.arabic, 'ar-SA', qData.phoneticId || qData.question);
+            }
+        }
+
+        function toggleHint() {
+            playSoundEffect('click');
+            const hintBox = document.getElementById('quiz-hint-box');
+            hintBox.classList.toggle('hidden');
+        }
+
+        function submitAnswer(selectedIndex) {
+            if (gameState.answeredCurrent) return;
+            gameState.answeredCurrent = true;
+            gameState.totalAnswered += 1;
+
+            const qData = gameState.stageQuestions[gameState.currentQIndex];
+            const isCorrect = selectedIndex === qData.answer;
+
+            document.querySelectorAll('.opt-btn').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-emerald-50', 'hover:border-emerald-400');
+            });
+
+            const selectedBtn = document.getElementById(`opt-btn-${selectedIndex}`);
+            const correctBtn = document.getElementById(`opt-btn-${qData.answer}`);
+
+            const feedbackBox = document.getElementById('quiz-feedback-box');
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackExp = document.getElementById('feedback-explanation');
+
+            if (isCorrect) {
+                playSoundEffect('correct');
+                gameState.streak += 1;
+                gameState.totalCorrect += 1;
+                const earnedStars = gameState.streak >= 3 ? 15 : 10;
+                gameState.stars += earnedStars;
+
+                selectedBtn.className = 'opt-btn bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-4 text-left flex items-center gap-3.5 shadow-sm';
+                
+                feedbackBox.className = 'rounded-2xl p-4 sm:p-5 border-2 border-emerald-300 bg-emerald-50 text-emerald-950 mb-4 animate-pop';
+                feedbackIcon.className = 'w-11 h-11 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-xl shrink-0';
+                feedbackIcon.innerHTML = '<i class="fa-solid fa-star"></i>';
+                feedbackTitle.textContent = gameState.streak >= 3 
+                    ? `MasyaAllah Hebat! (+${earnedStars} Bintang • Kombo ${gameState.streak}x 🔥)` 
+                    : `Alhamdulillah, Jawabanmu Benar! (+${earnedStars} Bintang ⭐)`;
+                feedbackExp.textContent = qData.explanation;
+            } else {
+                playSoundEffect('wrong');
+                gameState.streak = 0;
+                gameState.hearts -= 1;
+
+                const wrapper = document.getElementById('quiz-card-wrapper');
+                wrapper.classList.add('animate-shake');
+                setTimeout(() => wrapper.classList.remove('animate-shake'), 450);
+
+                selectedBtn.className = 'opt-btn bg-red-50 border-2 border-red-400 rounded-2xl p-4 text-left flex items-center gap-3.5';
+                correctBtn.className = 'opt-btn bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-4 text-left flex items-center gap-3.5';
+
+                feedbackBox.className = 'rounded-2xl p-4 sm:p-5 border-2 border-amber-300 bg-amber-50 text-amber-950 mb-4 animate-pop';
+                feedbackIcon.className = 'w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl shrink-0';
+                feedbackIcon.innerHTML = '<i class="fa-solid fa-lightbulb"></i>';
+                feedbackTitle.textContent = 'Belum Tepat, Yuk Belajar Bersama!';
+                feedbackExp.textContent = qData.explanation;
+            }
+
+            updateHUD();
+            feedbackBox.classList.remove('hidden');
+
+            const nextBtn = document.getElementById('btn-next-question');
+            if (gameState.hearts <= 0) {
+                nextBtn.innerHTML = 'Lihat Hasil <i class="fa-solid fa-arrow-right ml-1"></i>';
+            } else if (gameState.currentQIndex === 2) {
+                nextBtn.innerHTML = 'Selesaikan Pos Ini <i class="fa-solid fa-flag-checkered ml-1"></i>';
+            } else {
+                nextBtn.innerHTML = 'Soal Berikutnya <i class="fa-solid fa-arrow-right ml-1"></i>';
+            }
+        }
+
+        function nextQuestion() {
+            playSoundEffect('click');
+
+            if (gameState.hearts <= 0) {
+                document.getElementById('gameover-name').textContent = gameState.playerName;
+                document.getElementById('gameover-stars').textContent = `${gameState.stars} ⭐`;
+                showScreen('screen-gameover');
+                return;
+            }
+
+            if (gameState.currentQIndex < 2) {
+                gameState.currentQIndex += 1;
+                renderQuestion();
+                return;
+            }
+
+            if (!gameState.completedStages.includes(gameState.currentStage)) {
+                gameState.completedStages.push(gameState.currentStage);
+            }
+
+            if (gameState.currentStage >= STAGES.length - 1) {
+                showVictoryScreen();
+            } else {
+                playSoundEffect('levelup');
+                gameState.currentStage += 1;
+                renderAdventureMap();
+                showScreen('screen-map');
+            }
+        }
+
+        // =================================================================
+        // 7. LAYAR KEMENANGAN & EFEK KONFETI CERIA
+        // =================================================================
+        function showVictoryScreen() {
+            playSoundEffect('victory');
+
+            document.getElementById('victory-name').textContent = gameState.playerName;
+            document.getElementById('cert-player-name').textContent = gameState.playerName;
+            document.getElementById('victory-stars').textContent = `${gameState.stars} ⭐`;
+            document.getElementById('victory-correct').textContent = `${gameState.totalCorrect}/${gameState.totalAnswered}`;
+
+            let rank = 'Jayyid (Baik)';
+            if (gameState.totalCorrect >= 14) rank = 'Mumtaz (Istimewa)';
+            else if (gameState.totalCorrect >= 11) rank = 'Jayyid Jiddan';
+            document.getElementById('victory-rank').textContent = rank;
+
+            showScreen('screen-victory');
+            launchConfetti();
+        }
+
+        function resetGame() {
+            playSoundEffect('click');
+            stopConfetti();
+            showScreen('screen-start');
+        }
+
+        let confettiAnimationId = null;
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const colors = ['#10b981', '#f59e0b', '#fbbf24', '#0ea5e9', '#34d399'];
+            const pieces = Array.from({ length: 90 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 9 + 5,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedY: Math.random() * 3 + 2,
+                speedX: Math.random() * 2 - 1,
+                rotation: Math.random() * 360
+            }));
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => {
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                    ctx.restore();
+
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rotation += 3;
+
+                    if (p.y > canvas.height) {
+                        p.y = -20;
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+                confettiAnimationId = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function stopConfetti() {
+            if (confettiAnimationId) {
+                cancelAnimationFrame(confettiAnimationId);
+                confettiAnimationId = null;
+            }
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>

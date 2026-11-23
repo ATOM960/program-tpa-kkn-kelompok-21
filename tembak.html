@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tembak Kata Hijaiyah & Tajwid — Gerakan Mengaji Ceria TPA</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Fredoka, Poppins & Amiri (Kaligrafi Arab) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Fredoka:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons 6.5.1 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Fredoka', 'sans-serif'],
+                        sans: ['Poppins', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        gold: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        skysoft: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 3.5s ease-in-out infinite',
+                        'pop': 'pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                        'pulse-fast': 'pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-7px)' },
+                        },
+                        pop: {
+                            '0%': { transform: 'scale(0.85)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(180deg, #e0f2fe 0%, #ecfdf5 60%, #d1fae5 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-islamic-dots {
+            background-image: radial-gradient(#10b981 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+
+        /* Tombol 3D Ceria */
+        .btn-3d {
+            transition: all 0.15s ease;
+        }
+        .btn-3d:active:not(:disabled) {
+            transform: translateY(4px);
+        }
+        .btn-emerald-3d {
+            box-shadow: 0 5px 0 #047857;
+        }
+        .btn-emerald-3d:active:not(:disabled) {
+            box-shadow: 0 1px 0 #047857;
+        }
+        .btn-gold-3d {
+            box-shadow: 0 5px 0 #b45309;
+        }
+        .btn-gold-3d:active:not(:disabled) {
+            box-shadow: 0 1px 0 #b45309;
+        }
+        .btn-sky-3d {
+            box-shadow: 0 5px 0 #0369a1;
+        }
+        .btn-sky-3d:active:not(:disabled) {
+            box-shadow: 0 1px 0 #0369a1;
+        }
+
+        /* Kanvas Arena Tembak */
+        #shooter-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            cursor: crosshair;
+        }
+
+        /* Kanvas Konfeti */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 70;
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-800 bg-islamic-dots selection:bg-gold-300 selection:text-emerald-950">
+
+    <!-- Kanvas Konfeti Kemenangan -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- =====================================================================
+         TOP BAR / HUD PERMAINAN
+    ====================================================================== -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-emerald-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            
+            <!-- Tombol Beranda (Kembali ke portal_utama_gerakan_mengaji_ceria_tpa.html) & Judul Game -->
+            <div class="flex items-center gap-3">
+                <a href="index.html" inline-flex items-center gap-2 bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition-colors border border-slate-200">
+                    <i class="fa-solid fa-house text-emerald-600"></i>
+                    <span class="hidden sm:inline">Beranda</span>
+                </a>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gold-500 text-white flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-crosshairs"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-display font-bold text-base sm:text-lg text-emerald-900 leading-none">Tembak Kata Hijaiyah & Tajwid</h1>
+                        <span class="text-[11px] font-medium text-emerald-600">Gerakan Mengaji Ceria TPA</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HUD Status Pemain -->
+            <div class="flex items-center gap-2 sm:gap-2.5">
+                <!-- Nyawa (3 Hati) -->
+                <div id="hud-hearts" class="hidden bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl items-center gap-1" title="Kesempatan Hati">
+                    <i class="fa-solid fa-heart text-red-500 text-sm"></i>
+                    <i class="fa-solid fa-heart text-red-500 text-sm"></i>
+                    <i class="fa-solid fa-heart text-red-500 text-sm"></i>
+                </div>
+
+                <!-- Skor Bintang -->
+                <div id="hud-stars" class="hidden bg-gold-50 border border-gold-300 px-3 py-1.5 rounded-xl items-center gap-1.5" title="Skor Bintang">
+                    <i class="fa-solid fa-star text-gold-500 text-sm"></i>
+                    <span id="hud-star-count" class="font-display font-bold text-sm text-amber-900">0</span>
+                </div>
+
+                <!-- Wave / Ronde -->
+                <div id="hud-wave" class="hidden bg-skysoft-50 border border-skysoft-200 px-3 py-1.5 rounded-xl items-center gap-1.5" title="Gelombang Tantangan">
+                    <i class="fa-solid fa-layer-group text-skysoft-600 text-xs"></i>
+                    <span id="hud-wave-text" class="font-display font-bold text-xs text-skysoft-600">Wave 1/5</span>
+                </div>
+
+                <!-- Kombo Streak -->
+                <div id="hud-combo" class="hidden bg-orange-50 border border-orange-200 px-2.5 py-1.5 rounded-xl items-center gap-1" title="Kombo Beruntun">
+                    <span class="text-sm">🔥</span>
+                    <span id="hud-combo-count" class="font-display font-bold text-xs text-orange-700">0x</span>
+                </div>
+
+                <!-- Tombol Auto-Voice -->
+                <button type="button" id="btn-autovoice" onclick="toggleAutoVoice()" title="Pelafalan Suara Otomatis" class="w-10 h-10 rounded-xl bg-skysoft-50 hover:bg-skysoft-100 border border-skysoft-200 text-skysoft-600 flex items-center justify-center transition-colors">
+                    <i id="autovoice-icon" class="fa-solid fa-comment-dots"></i>
+                </button>
+
+                <!-- Tombol Mute / Unmute -->
+                <button type="button" id="btn-mute" onclick="toggleMute()" aria-label="Suara Efek" class="w-10 h-10 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 flex items-center justify-center transition-colors">
+                    <i id="mute-icon" class="fa-solid fa-volume-high"></i>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         MAIN CONTAINER (4 LAYAR: SETUP, SHOOTER ARENA, VICTORY, GAMEOVER)
+    ====================================================================== -->
+    <main class="max-w-5xl mx-auto px-3 sm:px-4 py-5 sm:py-8">
+
+        <!-- =================================================================
+             LAYAR 1: SETUP KARAKTER, NAMA SANTRI & PILIH MODE BELAJAR
+        ================================================================== -->
+        <section id="screen-setup" class="animate-pop">
+            <div class="bg-white rounded-[2.5rem] border-4 border-gold-300 shadow-xl p-6 sm:p-9 max-w-3xl mx-auto text-center relative overflow-hidden">
+                
+                <div class="inline-flex items-center gap-2 bg-gold-100 text-amber-900 font-display font-bold text-xs sm:text-sm px-4 py-1.5 rounded-full mb-3 border border-gold-300">
+                    🎯 Arena Ketangkasan Mengaji TPA
+                </div>
+
+                <h2 class="font-display font-bold text-3xl sm:text-4xl text-emerald-900 mb-2">
+                    Tembak Kata Hijaiyah & Tajwid
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base mb-6 max-w-xl mx-auto">
+                    Arahkan <strong>Peluncur Cahaya</strong> dan tembak gelembung huruf Arab atau hukum tajwid yang sesuai dengan soal di papan target!
+                </p>
+
+                <!-- Baris 1: Pilih Avatar & Nama Santri -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6 text-left">
+                    <!-- Pilih Avatar -->
+                    <div class="bg-slate-50 rounded-3xl p-4 border-2 border-slate-200">
+                        <label class="block font-display font-bold text-xs text-emerald-800 uppercase tracking-wider mb-2.5 text-center">
+                            1. Pilih Karakter Santri
+                        </label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button type="button" id="avatar-btn-putra" onclick="selectAvatar('putra')" class="bg-emerald-50 border-3 border-2 border-emerald-500 rounded-2xl p-3 flex flex-col items-center shadow-sm transition-all">
+                                <svg viewBox="0 0 120 120" class="w-16 h-16 mb-1" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="60" cy="60" r="54" fill="#D1FAE5"/>
+                                    <path d="M28 110 C28 85, 92 85, 92 110 Z" fill="#10B981"/>
+                                    <circle cx="60" cy="60" r="24" fill="#FDE68A"/>
+                                    <path d="M36 48 C36 30, 84 30, 84 48 Z" fill="#064E3B"/>
+                                    <rect x="36" y="45" width="48" height="5" rx="2" fill="#F59E0B"/>
+                                    <circle cx="52" cy="58" r="3" fill="#1E293B"/>
+                                    <circle cx="68" cy="58" r="3" fill="#1E293B"/>
+                                    <path d="M53 68 Q60 75 67 68" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                </svg>
+                                <span class="font-display font-bold text-xs text-emerald-900">Santri Putra</span>
+                            </button>
+
+                            <button type="button" id="avatar-btn-putri" onclick="selectAvatar('putri')" class="bg-white border-2 border-slate-200 hover:border-amber-400 rounded-2xl p-3 flex flex-col items-center transition-all">
+                                <svg viewBox="0 0 120 120" class="w-16 h-16 mb-1" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="60" cy="60" r="54" fill="#FEF3C7"/>
+                                    <path d="M32 62 C32 32, 88 32, 88 62 L94 110 L26 110 Z" fill="#F59E0B"/>
+                                    <path d="M38 64 C38 38, 82 38, 82 64 L85 110 L35 110 Z" fill="#FBBF24"/>
+                                    <circle cx="60" cy="60" r="21" fill="#FDE68A"/>
+                                    <circle cx="53" cy="58" r="3" fill="#1E293B"/>
+                                    <circle cx="67" cy="58" r="3" fill="#1E293B"/>
+                                    <path d="M54 68 Q60 74 66 68" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                </svg>
+                                <span class="font-display font-bold text-xs text-slate-800">Santri Putri</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Nama & Tes Suara -->
+                    <div class="bg-slate-50 rounded-3xl p-4 border-2 border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <label for="santri-name-input" class="block font-display font-bold text-xs text-emerald-800 uppercase tracking-wider mb-2 text-center">
+                                2. Tulis Nama Santri
+                            </label>
+                            <input type="text" id="santri-name-input" maxlength="22" placeholder="Contoh: Fatih / Aisyah..." 
+                                class="w-full text-center font-display font-bold text-base px-4 py-3 rounded-2xl bg-white border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none text-emerald-950 placeholder:font-sans placeholder:font-normal placeholder:text-xs">
+                        </div>
+
+                        <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between gap-2">
+                            <button type="button" onclick="testAudioSystem()" class="inline-flex items-center gap-1.5 bg-skysoft-500 hover:bg-skysoft-600 text-white font-display font-bold text-xs px-3.5 py-2 rounded-xl btn-3d btn-sky-3d shrink-0">
+                                🔊 Tes Suara
+                            </button>
+                            <div class="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-600 bg-white px-2.5 py-1.5 rounded-xl border border-slate-200 truncate">
+                                <span id="audio-status-dot" class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+                                <span id="audio-status-text" class="truncate">Cek Audio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Baris 2: Pilih Mode Permainan -->
+                <div class="mb-7">
+                    <label class="block font-display font-bold text-xs text-emerald-800 uppercase tracking-wider mb-3">
+                        3. Pilih Materi Sasaran Tembak
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-left">
+                        <button type="button" id="mode-btn-hijaiyah" onclick="selectGameMode('hijaiyah')" class="mode-card bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-3.5 shadow-sm transition-all">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-arabic text-2xl font-bold text-emerald-700">ا ب ت</span>
+                                <i class="fa-solid fa-circle-check text-emerald-600 mode-check"></i>
+                            </div>
+                            <h4 class="font-display font-bold text-sm text-emerald-950">Huruf Hijaiyah</h4>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Tembak bentuk huruf Arab sesuai namanya.</p>
+                        </button>
+
+                        <button type="button" id="mode-btn-harakat" onclick="selectGameMode('harakat')" class="mode-card bg-white border-2 border-slate-200 hover:border-skysoft-400 rounded-2xl p-3.5 transition-all">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-arabic text-2xl font-bold text-skysoft-600">بَ بِ بُ</span>
+                                <i class="fa-regular fa-circle text-slate-300 mode-check"></i>
+                            </div>
+                            <h4 class="font-display font-bold text-sm text-slate-800">Harakat & Tanwin</h4>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Tembak bunyi Fathah, Kasrah, Dhammah & Tanwin.</p>
+                        </button>
+
+                        <button type="button" id="mode-btn-tajwid" onclick="selectGameMode('tajwid')" class="mode-card bg-white border-2 border-slate-200 hover:border-gold-400 rounded-2xl p-3.5 transition-all">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-arabic text-2xl font-bold text-gold-600">قَالَ</span>
+                                <i class="fa-regular fa-circle text-slate-300 mode-check"></i>
+                            </div>
+                            <h4 class="font-display font-bold text-sm text-slate-800">Tajwid Dasar</h4>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Tembak contoh lafaz Mad, Idzhar, Iqlab & Qalqalah.</p>
+                        </button>
+
+                        <button type="button" id="mode-btn-mixed" onclick="selectGameMode('mixed')" class="mode-card bg-white border-2 border-slate-200 hover:border-emerald-400 rounded-2xl p-3.5 transition-all">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xl">🌟</span>
+                                <i class="fa-regular fa-circle text-slate-300 mode-check"></i>
+                            </div>
+                            <h4 class="font-display font-bold text-sm text-slate-800">Mode Campuran</h4>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Tantangan lengkap semua materi TPA!</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tombol Mulai Tembak Kata -->
+                <button type="button" onclick="startGame()" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-gold-500 hover:bg-gold-600 text-white font-display font-bold text-xl px-10 py-4 rounded-2xl btn-3d btn-gold-3d">
+                    <i class="fa-solid fa-rocket text-2xl"></i>
+                    Mulai Tembak Kata!
+                </button>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             LAYAR 2: ARENA TEMBAK KATA INTERAKTIF (HTML5 CANVAS)
+        ================================================================== -->
+        <section id="screen-arena" class="hidden animate-pop space-y-3">
+            
+            <!-- Papan Target Soal Atas -->
+            <div class="bg-white rounded-3xl border-4 border-emerald-200 shadow-md p-3.5 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center gap-3 text-center sm:text-left">
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-600 text-gold-300 flex items-center justify-center text-xl shrink-0 shadow-sm">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-center sm:justify-start gap-2">
+                            <span id="target-category-badge" class="bg-emerald-100 text-emerald-800 font-display font-bold text-[11px] px-2.5 py-0.5 rounded-full">
+                                HURUF HIJAIYAH
+                            </span>
+                            <span id="target-progress-badge" class="bg-gold-100 text-amber-900 font-bold text-[11px] px-2.5 py-0.5 rounded-full">
+                                Target 1 / 5
+                            </span>
+                        </div>
+                        <h2 id="target-prompt-text" class="font-display font-bold text-lg sm:text-2xl text-emerald-950 mt-0.5 leading-tight">
+                            Tembak Huruf: Ba (Titik 1 di Bawah)
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 shrink-0">
+                    <button type="button" onclick="speakCurrentTarget(true)" class="inline-flex items-center gap-1.5 bg-skysoft-500 hover:bg-skysoft-600 text-white font-display font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl btn-3d btn-sky-3d">
+                        <i class="fa-solid fa-volume-high"></i> 🔊 Dengarkan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Banner Umpan Balik Edukatif (Melayang di Atas Kanvas) -->
+            <div class="relative w-full h-[450px] sm:h-[520px] rounded-[2rem] border-4 border-skysoft-300 shadow-xl overflow-hidden bg-sky-100">
+                
+                <!-- Banner Feedback Sementara -->
+                <div id="arena-feedback-banner" class="hidden absolute top-3 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-lg rounded-2xl px-4 py-2.5 shadow-lg border-2 text-center font-semibold text-xs sm:text-sm transition-all">
+                    <span id="arena-feedback-text">Keterangan edukatif muncul di sini!</span>
+                </div>
+
+                <!-- Banner Wave Up -->
+                <div id="wave-announcement" class="hidden absolute inset-0 z-30 bg-emerald-950/60 backdrop-blur-xs flex items-center justify-center p-4 pointer-events-none">
+                    <div class="bg-white border-4 border-gold-400 rounded-3xl px-8 py-6 text-center shadow-2xl animate-pop">
+                        <span class="text-xs font-bold uppercase tracking-wider text-gold-600 block">MasyaAllah Hebat!</span>
+                        <h3 id="wave-announce-title" class="font-display font-bold text-3xl text-emerald-900 mt-1">Wave 2 Dimulai!</h3>
+                        <p class="text-xs text-slate-600 mt-1">Kecepatan gelembung sedikit meningkat. Tetap fokus ya!</p>
+                    </div>
+                </div>
+
+                <!-- Kanvas Game Utama -->
+                <canvas id="shooter-canvas"></canvas>
+
+                <!-- Petunjuk Kontrol Bawah Kanvas -->
+                <div class="absolute bottom-2 left-3 right-3 z-10 flex items-center justify-between text-[11px] font-semibold text-white/95 pointer-events-none drop-shadow">
+                    <span>👆 Klik / Sentuh langsung gelembung target atau tekan Spasi</span>
+                    <span id="hud-accuracy-live" class="hidden sm:inline bg-black/25 px-2.5 py-0.5 rounded-full">Akurasi: 100%</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- =================================================================
+             LAYAR 3A: KEMENANGAN AKHIR & PIAGAM PENEMBAK JITU QURANI
+        ================================================================== -->
+        <section id="screen-victory" class="hidden animate-pop">
+            <div class="bg-white rounded-[2.5rem] border-4 border-gold-400 shadow-2xl p-6 sm:p-10 max-w-2xl mx-auto text-center relative overflow-hidden">
+                
+                <div class="inline-flex items-center gap-2 bg-gold-100 text-amber-900 font-display font-bold text-xs sm:text-sm px-4 py-1.5 rounded-full mb-4 border border-gold-300">
+                    🏆 ALHAMDULILLAH • 5 GELOMBANG TUNTAS
+                </div>
+
+                <h2 class="font-display font-bold text-3xl sm:text-4xl text-emerald-900 mb-2">
+                    Luar Biasa, <span id="victory-player-name" class="text-emerald-600">Santri</span>!
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base mb-6">
+                    Ketangkasan dan ketelitianmu dalam mengenali huruf hijaiyah serta hukum tajwid sangat membanggakan!
+                </p>
+
+                <!-- Piagam Penghargaan -->
+                <div class="bg-gradient-to-br from-emerald-50 via-white to-gold-50 border-4 border-double border-gold-400 rounded-3xl p-6 sm:p-8 mb-7 shadow-inner">
+                    <div class="w-16 h-16 rounded-2xl bg-gold-400 text-emerald-950 flex items-center justify-center text-3xl mx-auto mb-3 shadow-md">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <span class="text-xs font-bold tracking-widest uppercase text-emerald-700 block">
+                        Sertifikat Ketangkasan TPA • Gerakan Mengaji Ceria
+                    </span>
+                    <h3 class="font-display font-bold text-2xl sm:text-3xl text-emerald-950 my-1">
+                        Penembak Jitu Huruf & Tajwid
+                    </h3>
+                    <p class="font-display font-bold text-lg text-emerald-700 mb-4" id="cert-player-name">
+                        Nama Santri
+                    </p>
+
+                    <div class="grid grid-cols-3 gap-3 max-w-md mx-auto">
+                        <div class="bg-white rounded-2xl p-3 border border-gold-200 shadow-sm">
+                            <span class="text-[11px] font-bold text-slate-500 block">Total Bintang</span>
+                            <span id="victory-stars" class="font-display font-bold text-xl text-gold-600">0 ⭐</span>
+                        </div>
+                        <div class="bg-white rounded-2xl p-3 border border-emerald-200 shadow-sm">
+                            <span class="text-[11px] font-bold text-slate-500 block">Akurasi Tembakan</span>
+                            <span id="victory-accuracy" class="font-display font-bold text-xl text-emerald-600">100%</span>
+                        </div>
+                        <div class="bg-white rounded-2xl p-3 border border-skysoft-200 shadow-sm">
+                            <span class="text-[11px] font-bold text-slate-500 block">Predikat</span>
+                            <span id="victory-rank" class="font-display font-bold text-sm sm:text-base text-skysoft-600 mt-1 block">Mumtaz!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi Akhir -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button type="button" onclick="resetToSetup()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-base px-7 py-4 rounded-2xl btn-3d btn-emerald-3d">
+                        <i class="fa-solid fa-rotate-right"></i> Main Lagi
+                    </button>
+                    <a href="index.html" w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gold-400 hover:bg-gold-500 text-emerald-950 font-display font-bold text-base px-7 py-4 rounded-2xl btn-3d btn-gold-3d">
+                        <i class="fa-solid fa-house"></i> Kembali ke Beranda
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             LAYAR 3B: GAME OVER (SEMANGAT BERLATIH LAGI)
+        ================================================================== -->
+        <section id="screen-gameover" class="hidden animate-pop">
+            <div class="bg-white rounded-[2.5rem] border-4 border-amber-300 shadow-xl p-6 sm:p-10 max-w-xl mx-auto text-center">
+                <div class="w-20 h-20 rounded-3xl bg-amber-100 text-amber-600 flex items-center justify-center text-4xl mx-auto mb-4">
+                    <i class="fa-solid fa-heart-crack"></i>
+                </div>
+                <h2 class="font-display font-bold text-2xl sm:text-3xl text-slate-800 mb-2">
+                    Tetap Semangat, <span id="gameover-player-name" class="text-emerald-600">Santri</span>!
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base mb-6">
+                    Kesempatan hatimu sudah habis. Perhatikan titik huruf hijaiyah dan tanda baca harakat dengan tenang, lalu coba lagi!
+                </p>
+                <div class="bg-gold-50 border border-gold-200 rounded-2xl p-4 mb-6 inline-block px-8">
+                    <span class="text-xs font-bold text-slate-500 block">Skor Bintang Terkumpul</span>
+                    <span id="gameover-stars" class="font-display font-bold text-2xl text-gold-600">0 ⭐</span>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button type="button" onclick="resetToSetup()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-base px-7 py-3.5 rounded-2xl btn-3d btn-emerald-3d">
+                        <i class="fa-solid fa-rotate-right"></i> Coba Lagi
+                    </button>
+                    <a href="index.html" w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-base px-6 py-3.5 rounded-2xl">
+                        <i class="fa-solid fa-house"></i> Beranda
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =====================================================================
+         JAVASCRIPT LOGIKA GAME SHOOTER, AUDIO ANTI-BISU, & BANK MATERI TPA
+    ====================================================================== -->
+    <script>
+        // =================================================================
+        // 1. SISTEM AUDIO ANTI-BISU (WEB AUDIO API + SPEECH SYNTHESIS FALLBACK)
+        // =================================================================
+        let audioCtx = null;
+        let isMuted = false;
+        let autoVoiceEnabled = true;
+        let cachedVoices = [];
+        let speechKeepAlive = null;
+
+        function loadSystemVoices() {
+            if ('speechSynthesis' in window) {
+                cachedVoices = window.speechSynthesis.getVoices();
+            }
+        }
+        if ('speechSynthesis' in window) {
+            loadSystemVoices();
+            window.speechSynthesis.onvoiceschanged = loadSystemVoices;
+        }
+
+        function unlockAudioContext() {
+            try {
+                if (!audioCtx) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContextClass) {
+                        audioCtx = new AudioContextClass();
+                    }
+                }
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                if (audioCtx && audioCtx.state === 'running') {
+                    const buffer = audioCtx.createBuffer(1, 1, 22050);
+                    const source = audioCtx.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(audioCtx.destination);
+                    source.start(0);
+                    updateAudioStatusIndicator(true);
+                }
+            } catch (err) {
+                console.warn('AudioContext unlock info:', err);
+            }
+        }
+
+        ['click', 'touchstart', 'keydown'].forEach(evt => {
+            document.addEventListener(evt, unlockAudioContext, { passive: true });
+        });
+
+        function updateAudioStatusIndicator(active) {
+            const dot = document.getElementById('audio-status-dot');
+            const text = document.getElementById('audio-status-text');
+            if (!dot || !text) return;
+
+            if (isMuted) {
+                dot.className = 'w-2 h-2 rounded-full bg-red-500 shrink-0';
+                text.textContent = 'Senyap';
+            } else if (active) {
+                dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-ping shrink-0';
+                text.textContent = 'Suara Aktif!';
+            }
+        }
+
+        function playTone(freq, type, duration, delay = 0, volume = 0.2, endFreq = null) {
+            if (isMuted) return;
+            unlockAudioContext();
+            if (!audioCtx) return;
+
+            try {
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now + delay);
+                if (endFreq) {
+                    osc.frequency.exponentialRampToValueAtTime(endFreq, now + delay + duration);
+                }
+
+                gain.gain.setValueAtTime(0.001, now + delay);
+                gain.gain.linearRampToValueAtTime(volume, now + delay + 0.015);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + delay + duration);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now + delay);
+                osc.stop(now + delay + duration + 0.02);
+            } catch (e) {
+                console.warn('Tone error:', e);
+            }
+        }
+
+        function playSoundEffect(effect) {
+            if (isMuted) return;
+            unlockAudioContext();
+
+            switch (effect) {
+                case 'click':
+                    playTone(580, 'sine', 0.1, 0, 0.15);
+                    break;
+                case 'shoot':
+                    // Efek tembakan cahaya ceria (pew lembut)
+                    playTone(680, 'sine', 0.14, 0, 0.16, 260);
+                    break;
+                case 'hit':
+                    // Gelembung meletus benar (nada ceria naik)
+                    playTone(523.25, 'triangle', 0.12, 0, 0.24);
+                    playTone(783.99, 'triangle', 0.14, 0.07, 0.24);
+                    playTone(1046.50, 'triangle', 0.22, 0.14, 0.26);
+                    break;
+                case 'wrong':
+                    // Suara lembut saat salah sasaran
+                    playTone(280, 'triangle', 0.18, 0, 0.2);
+                    playTone(210, 'triangle', 0.26, 0.14, 0.2);
+                    break;
+                case 'levelup':
+                    // Fanfare naik gelombang
+                    [440, 554.37, 659.25, 880].forEach((f, i) => {
+                        playTone(f, 'triangle', 0.18, i * 0.1, 0.24);
+                    });
+                    break;
+                case 'victory':
+                    // Lagu kemenangan meriah
+                    const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+                    const times = [0, 0.14, 0.28, 0.42, 0.62, 0.78];
+                    notes.forEach((n, idx) => playTone(n, 'triangle', 0.28, times[idx], 0.26));
+                    break;
+            }
+        }
+
+        function speakText(arabicText, preferredLang = 'ar-SA', fallbackIndonesian = '') {
+            if (isMuted) return;
+            unlockAudioContext();
+            if (!('speechSynthesis' in window)) return;
+
+            try {
+                window.speechSynthesis.cancel();
+                if (speechKeepAlive) clearInterval(speechKeepAlive);
+
+                if (cachedVoices.length === 0) {
+                    cachedVoices = window.speechSynthesis.getVoices();
+                }
+
+                const arabicVoice = cachedVoices.find(v => v.lang && v.lang.toLowerCase().startsWith('ar'));
+                const indoVoice = cachedVoices.find(v => v.lang && (v.lang.toLowerCase().startsWith('id') || v.lang.toLowerCase().startsWith('in')));
+
+                const utter = new SpeechSynthesisUtterance();
+                utter.volume = 1.0;
+                utter.rate = 0.92;
+                utter.pitch = 1.05;
+
+                if (preferredLang.startsWith('ar') && arabicVoice) {
+                    utter.voice = arabicVoice;
+                    utter.lang = arabicVoice.lang;
+                    utter.text = arabicText;
+                } else {
+                    utter.text = fallbackIndonesian || arabicText;
+                    if (indoVoice) {
+                        utter.voice = indoVoice;
+                        utter.lang = indoVoice.lang;
+                    } else {
+                        utter.lang = 'id-ID';
+                    }
+                }
+
+                speechKeepAlive = setInterval(() => {
+                    if (!window.speechSynthesis.speaking) {
+                        clearInterval(speechKeepAlive);
+                    } else {
+                        window.speechSynthesis.resume();
+                    }
+                }, 2500);
+
+                utter.onend = () => clearInterval(speechKeepAlive);
+                utter.onerror = () => clearInterval(speechKeepAlive);
+
+                window.speechSynthesis.speak(utter);
+            } catch (e) {
+                console.warn('SpeechSynthesis error:', e);
+            }
+        }
+
+        function testAudioSystem() {
+            unlockAudioContext();
+            if (isMuted) {
+                isMuted = false;
+                document.getElementById('mute-icon').className = 'fa-solid fa-volume-high';
+            }
+            playSoundEffect('levelup');
+            updateAudioStatusIndicator(true);
+            speakText('Assalamualaikum, peluncur cahaya dan suara siap!', 'id-ID', 'Assalamualaikum, peluncur cahaya dan suara siap!');
+        }
+
+        function toggleMute() {
+            unlockAudioContext();
+            isMuted = !isMuted;
+            const icon = document.getElementById('mute-icon');
+            if (isMuted) {
+                icon.className = 'fa-solid fa-volume-xmark text-red-500';
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            } else {
+                icon.className = 'fa-solid fa-volume-high';
+                playSoundEffect('click');
+            }
+            updateAudioStatusIndicator(!isMuted);
+        }
+
+        function toggleAutoVoice() {
+            unlockAudioContext();
+            autoVoiceEnabled = !autoVoiceEnabled;
+            const btn = document.getElementById('btn-autovoice');
+            const icon = document.getElementById('autovoice-icon');
+            if (autoVoiceEnabled) {
+                btn.className = 'w-10 h-10 rounded-xl bg-skysoft-50 hover:bg-skysoft-100 border border-skysoft-200 text-skysoft-600 flex items-center justify-center transition-colors';
+                icon.className = 'fa-solid fa-comment-dots';
+                playSoundEffect('click');
+                speakCurrentTarget(false);
+            } else {
+                btn.className = 'w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-400 flex items-center justify-center transition-colors';
+                icon.className = 'fa-solid fa-comment-slash';
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            }
+        }
+
+        // =================================================================
+        // 2. BANK MATERI SASARAN TEMBAK (HIJAIYAH, HARAKAT, TAJWID)
+        // =================================================================
+        const TARGET_BANK = {
+            hijaiyah: [
+                {
+                    category: 'HURUF HIJAIYAH',
+                    prompt: 'Tembak Huruf: Alif (Tegak Lurus)',
+                    arabic: 'ا',
+                    speak: 'ألف',
+                    phoneticId: 'Tembak huruf Alif',
+                    distractors: ['ب', 'ل', 'ك', 'و'],
+                    tip: 'Alif (ا) berdiri tegak lurus seperti angka satu tanpa titik.'
+                },
+                {
+                    category: 'HURUF HIJAIYAH',
+                    prompt: 'Tembak Huruf: Ba (1 Titik di Bawah)',
+                    arabic: 'ب',
+                    speak: 'باء',
+                    phoneticId: 'Tembak huruf Ba, satu titik di bawah',
+                    distractors: ['ت', 'ث', 'ن', 'ي'],
+                    tip: 'Huruf Ba (ب) memiliki 1 titik tepat di bawah lengkungannya.'
+                },
+                {
+                    category: 'HURUF HIJAIYAH',
+                    prompt: 'Tembak Huruf: Ta (2 Titik di Atas)',
+                    arabic: 'ت',
+                    speak: 'تاء',
+                    phoneticId: 'Tembak huruf Ta, dua titik di atas',
+                    distractors: ['ب', 'ث', 'ن', 'ق'],
+                    tip: 'Huruf Ta (ت) berbentuk perahu dengan 2 titik di atas.'
+                },
+                {
+                    category: 'HURUF HIJAIYAH',
+                    prompt: 'Tembak Huruf: Tsa (3 Titik di Atas)',
+                    arabic: 'ث',
+                    speak: 'ثاء',
+                    phoneticId: 'Tembak huruf Tsa, tiga titik di atas',
+                    distractors: ['ب', 'ت', 'ش', 'ج'],
+                    tip: 'Huruf Tsa (ث) memiliki 3 titik di atas lengkungannya.'
+                },
+                {
+                    category: 'HURUF HIJAIYAH',
+                    prompt: 'Tembak Huruf: Jim (1 Titik di Tengah)',
+                    arabic: 'ج',
+                    speak: 'جيم',
+                    phoneticId: 'Tembak huruf Jim, satu titik di tengah',
+                    distractors: ['ح', 'خ', 'ع', 'غ'],
+                    tip: 'Huruf Jim (ج) memiliki 1 titik di tengah perutnya.'
+                },
+                {
+                    category: 'HURUF HIJAIYAH',
+                    prompt: 'Tembak Huruf: Ha (Polos Tanpa Titik)',
+                    arabic: 'ح',
+                    speak: 'حاء',
+                    phoneticId: 'Tembak huruf Ha, polos tanpa titik',
+                    distractors: ['ج', 'خ', 'ع', 'هـ'],
+                    tip: 'Huruf Ha (ح) bersih tanpa titik di tengah maupun di atas.'
+                },
+                {
+                    category: 'HURUF HIJAIYAH',
+                    prompt: 'Tembak Huruf: Kha (1 Titik di Atas)',
+                    arabic: 'خ',
+                    speak: 'خاء',
+                    phoneticId: 'Tembak huruf Kha, satu titik di atas',
+                    distractors: ['ج', 'ح', 'غ', 'ف'],
+                    tip: 'Huruf Kha (خ) memiliki 1 titik di atas kepalanya.'
+                },
+                {
+                    category: 'HURUF HIJAIYAH',
+                    prompt: 'Tembak Huruf: Syin (3 Gigi & 3 Titik)',
+                    arabic: 'ش',
+                    speak: 'شين',
+                    phoneticId: 'Tembak huruf Syin, tiga titik di atas',
+                    distractors: ['س', 'ص', 'ض', 'ث'],
+                    tip: 'Huruf Syin (ش) memiliki 3 titik di atas giginya.'
+                },
+                {
+                    category: 'HURUF HIJAIYAH',
+                    prompt: 'Tembak Huruf: Qaf (2 Titik di Atas)',
+                    arabic: 'ق',
+                    speak: 'قاف',
+                    phoneticId: 'Tembak huruf Qaf, dua titik di atas',
+                    distractors: ['ف', 'ك', 'و', 'م'],
+                    tip: 'Huruf Qaf (ق) memiliki 2 titik di atas kepala bulatnya.'
+                },
+                {
+                    category: 'HURUF HIJAIYAH',
+                    prompt: 'Tembak Huruf: Nun (Mangkuk 1 Titik Atas)',
+                    arabic: 'ن',
+                    speak: 'نون',
+                    phoneticId: 'Tembak huruf Nun, satu titik di atas mangkuk',
+                    distractors: ['ب', 'ت', 'ز', 'ر'],
+                    tip: 'Huruf Nun (ن) berbentuk mangkuk dalam dengan 1 titik di atas.'
+                }
+            ],
+
+            harakat: [
+                {
+                    category: 'HARAKAT & TANWIN',
+                    prompt: 'Tembak Bacaan: "Ba" (Fathah)',
+                    arabic: 'بَ',
+                    speak: 'بَ',
+                    phoneticId: 'Tembak bacaan Ba berharakat fathah',
+                    distractors: ['بِ', 'بُ', 'بًا', 'تَ'],
+                    tip: 'Fathah adalah garis miring di atas huruf yang berbunyi vokal "A".'
+                },
+                {
+                    category: 'HARAKAT & TANWIN',
+                    prompt: 'Tembak Bacaan: "Bi" (Kasrah)',
+                    arabic: 'بِ',
+                    speak: 'بِ',
+                    phoneticId: 'Tembak bacaan Bi berharakat kasrah',
+                    distractors: ['بَ', 'بُ', 'بٍ', 'نِ'],
+                    tip: 'Kasrah adalah garis miring di bawah huruf yang berbunyi vokal "I".'
+                },
+                {
+                    category: 'HARAKAT & TANWIN',
+                    prompt: 'Tembak Bacaan: "Bu" (Dhammah)',
+                    arabic: 'بُ',
+                    speak: 'بُ',
+                    phoneticId: 'Tembak bacaan Bu berharakat dhammah',
+                    distractors: ['بَ', 'بِ', 'بٌ', 'تُ'],
+                    tip: 'Dhammah berbentuk seperti wawu kecil di atas huruf berbunyi "U".'
+                },
+                {
+                    category: 'HARAKAT & TANWIN',
+                    prompt: 'Tembak Bacaan: "Ban" (Fathatain)',
+                    arabic: 'بًا',
+                    speak: 'بًا',
+                    phoneticId: 'Tembak bacaan Ban berharakat fathatain',
+                    distractors: ['بٍ', 'بٌ', 'بَ', 'تًا'],
+                    tip: 'Fathatain (dua garis di atas) berbunyi akhiran "-an".'
+                },
+                {
+                    category: 'HARAKAT & TANWIN',
+                    prompt: 'Tembak Bacaan: "Bin" (Kasratain)',
+                    arabic: 'بٍ',
+                    speak: 'بٍ',
+                    phoneticId: 'Tembak bacaan Bin berharakat kasratain',
+                    distractors: ['بًا', 'بٌ', 'بِ', 'نٍ'],
+                    tip: 'Kasratain (dua garis di bawah) berbunyi akhiran "-in".'
+                },
+                {
+                    category: 'HARAKAT & TANWIN',
+                    prompt: 'Tembak Bacaan: "Bun" (Dhammatain)',
+                    arabic: 'بٌ',
+                    speak: 'بٌ',
+                    phoneticId: 'Tembak bacaan Bun berharakat dhammatain',
+                    distractors: ['بًا', 'بٍ', 'بُ', 'تٌ'],
+                    tip: 'Dhammatain berbunyi akhiran "-un".'
+                },
+                {
+                    category: 'HARAKAT & TANWIN',
+                    prompt: 'Tembak Bacaan: "Ku" (Kaf Dhammah)',
+                    arabic: 'كُ',
+                    speak: 'كُ',
+                    phoneticId: 'Tembak bacaan Ku, huruf Kaf berharakat dhammah',
+                    distractors: ['كَ', 'كِ', 'قُ', 'لُ'],
+                    tip: 'Huruf Kaf dengan tanda dhammah di atas dibaca "Ku".'
+                },
+                {
+                    category: 'HARAKAT & TANWIN',
+                    prompt: 'Tembak Bacaan: "Mi" (Mim Kasrah)',
+                    arabic: 'مِ',
+                    speak: 'مِ',
+                    phoneticId: 'Tembak bacaan Mi, huruf Mim berharakat kasrah',
+                    distractors: ['مَ', 'مُ', 'مٍ', 'نِ'],
+                    tip: 'Huruf Mim dengan garis miring kasrah di bawah dibaca "Mi".'
+                },
+                {
+                    category: 'HARAKAT & TANWIN',
+                    prompt: 'Tembak Bacaan: "Sya" (Syin Fathah)',
+                    arabic: 'شَ',
+                    speak: 'شَ',
+                    phoneticId: 'Tembak bacaan Sya, huruf Syin berharakat fathah',
+                    distractors: ['سَ', 'شِ', 'شُ', 'ثَ'],
+                    tip: 'Huruf Syin bertitik tiga dengan garis fathah di atas dibaca "Sya".'
+                },
+                {
+                    category: 'HARAKAT & TANWIN',
+                    prompt: 'Tembak Bacaan: "Run" (Ra Dhammatain)',
+                    arabic: 'رٌ',
+                    speak: 'رٌ',
+                    phoneticId: 'Tembak bacaan Run, huruf Ra berharakat dhammatain',
+                    distractors: ['رًا', 'رٍ', 'رُ', 'زٌ'],
+                    tip: 'Huruf Ra bertanda dhammatain dibaca "Run".'
+                }
+            ],
+
+            tajwid: [
+                {
+                    category: 'TAJWID: MAD THABI’I',
+                    prompt: 'Tembak Contoh Bacaan: Mad Thabi’i (Panjang 2 Harakat)',
+                    arabic: 'قَالَ',
+                    speak: 'قَالَ',
+                    phoneticId: 'Tembak contoh Mad Thabii: Qaala',
+                    distractors: ['قُلْ', 'مِنْ خَوْفٍ', 'إِنَّا', 'مِنْ بَعْدِ'],
+                    tip: 'Mad Thabi’i ditandai fathah diikuti Alif mati seperti pada kata قَالَ (Qaala).'
+                },
+                {
+                    category: 'TAJWID: IDZHAR HALQI',
+                    prompt: 'Tembak Contoh Bacaan: Idzhar Halqi (Dibaca Jelas)',
+                    arabic: 'مِنْ خَوْفٍ',
+                    speak: 'مِنْ خَوْفٍ',
+                    phoneticId: 'Tembak contoh Idzhar Halqi: Min khaufin',
+                    distractors: ['مِنْ بَعْدِ', 'مِنْ وَرَائِهِمْ', 'قَالَ', 'إِنَّا'],
+                    tip: 'Nun Sukun (نْ) bertemu huruf tenggorokan Kha (خ) dibaca jelas.'
+                },
+                {
+                    category: 'TAJWID: IQLAB',
+                    prompt: 'Tembak Contoh Bacaan: Iqlab (Nun Sukun bertemu Ba)',
+                    arabic: 'مِنْ بَعْدِ',
+                    speak: 'مِنْ بَعْدِ',
+                    phoneticId: 'Tembak contoh Iqlab: Mim ba-di',
+                    distractors: ['مِنْ خَوْفٍ', 'قَالَ', 'يَدْخُلُونَ', 'اَلْحَمْدُ'],
+                    tip: 'Iqlab terjadi saat Nun Sukun (نْ) bertemu huruf Ba (ب), berubah bunyi menjadi Mim.'
+                },
+                {
+                    category: 'TAJWID: IDGHAM BIGHUNNAH',
+                    prompt: 'Tembak Contoh Bacaan: Idgham Bighunnah (Mendengung)',
+                    arabic: 'مِنْ وَرَائِهِمْ',
+                    speak: 'مِنْ وَرَائِهِمْ',
+                    phoneticId: 'Tembak contoh Idgham Bighunnah: Miw wara-ihim',
+                    distractors: ['مِنْ خَوْفٍ', 'مِنْ بَعْدِ', 'قُلْ هُوَ', 'لَمْ يَلِدْ'],
+                    tip: 'Nun Sukun (نْ) bertemu huruf Wawu (و) dibaca masuk dengan mendengung.'
+                },
+                {
+                    category: 'TAJWID: QALQALAH',
+                    prompt: 'Tembak Contoh Bacaan: Qalqalah (Huruf Memantul)',
+                    arabic: 'لَمْ يَلِدْ',
+                    speak: 'لَمْ يَلِدْ',
+                    phoneticId: 'Tembak contoh Qalqalah: Lam yalid',
+                    distractors: ['قَالَ', 'مِنْ خَوْفٍ', 'إِنَّا', 'اَلْعَالَمِينَ'],
+                    tip: 'Huruf Dal sukun (دْ) di akhir kata memantul (Qalqalah Kubra).'
+                },
+                {
+                    category: 'TAJWID: GHUNNAH',
+                    prompt: 'Tembak Contoh Bacaan: Ghunnah (Nun/Mim Bertasydid)',
+                    arabic: 'إِنَّا',
+                    speak: 'إِنَّا',
+                    phoneticId: 'Tembak contoh Ghunnah: Innaa',
+                    distractors: ['قَالَ', 'مِنْ خَوْفٍ', 'قُلْ', 'لَمْ يَلِدْ'],
+                    tip: 'Huruf Nun bertasydid (نّ) wajib ditahan dengungnya selama 2 harakat.'
+                },
+                {
+                    category: 'TAJWID: ALIF LAM QAMARIYAH',
+                    prompt: 'Tembak Contoh Bacaan: Alif Lam Qamariyah (Lam Jelas)',
+                    arabic: 'اَلْقَمَرُ',
+                    speak: 'القمر',
+                    phoneticId: 'Tembak contoh Alif Lam Qamariyah: Al-Qamaru',
+                    distractors: ['اَلشَّمْسُ', 'اَلنَّاسُ', 'اَلرَّحْمٰنُ', 'اَلضُّحٰى'],
+                    tip: 'Alif Lam Qamariyah ditandai tanda sukun pada huruf Lam (اَلْ) sehingga dibaca jelas.'
+                },
+                {
+                    category: 'TAJWID: ALIF LAM SYAMSIYAH',
+                    prompt: 'Tembak Contoh Bacaan: Alif Lam Syamsiyah (Tasydid)',
+                    arabic: 'اَلشَّمْسُ',
+                    speak: 'الشمس',
+                    phoneticId: 'Tembak contoh Alif Lam Syamsiyah: Asy-Syamsu',
+                    distractors: ['اَلْقَمَرُ', 'اَلْحَمْدُ', 'اَلْكَوْثَرُ', 'اَلْفَلَقُ'],
+                    tip: 'Alif Lam Syamsiyah langsung masuk ke huruf bertasydid setelahnya (اَلشَّ).'
+                }
+            ]
+        };
+
+        // =================================================================
+        // 3. STATE PERMAINAN & KANVAS SHOOTER
+        // =================================================================
+        let gameState = {
+            avatar: 'putra',
+            playerName: 'Santri Cilik',
+            mode: 'hijaiyah',
+            wave: 1,
+            maxWaves: 5,
+            targetsPerWave: 5,
+            waveTargetIndex: 0,
+            stars: 0,
+            hearts: 3,
+            combo: 0,
+            totalShots: 0,
+            correctHits: 0,
+            isRunning: false,
+            isTransitioning: false,
+            currentTarget: null,
+            usedIndices: []
+        };
+
+        const canvas = document.getElementById('shooter-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let cannon = {
+            x: 0,
+            y: 0,
+            angle: -Math.PI / 2,
+            recoil: 0
+        };
+
+        let bubbles = [];
+        let projectiles = [];
+        let particles = [];
+        let floatingTexts = [];
+        let animationFrameId = null;
+        let lastFrameTime = 0;
+
+        const BUBBLE_PALETTES = [
+            { fill: '#ffffff', stroke: '#10b981', text: '#064e3b', glow: 'rgba(16, 185, 129, 0.25)' },
+            { fill: '#fffbeb', stroke: '#f59e0b', text: '#78350f', glow: 'rgba(245, 158, 11, 0.25)' },
+            { fill: '#f0f9ff', stroke: '#0ea5e9', text: '#0c4a6e', glow: 'rgba(14, 165, 233, 0.25)' },
+            { fill: '#fdf4ff', stroke: '#c026d3', text: '#701a75', glow: 'rgba(192, 38, 211, 0.2)' },
+            { fill: '#fef2f2', stroke: '#f43f5e', text: '#881337', glow: 'rgba(244, 63, 94, 0.2)' }
+        ];
+
+        // =================================================================
+        // 4. SETUP UI & NAVIGASI LAYAR
+        // =================================================================
+        function switchScreen(screenId) {
+            ['screen-setup', 'screen-arena', 'screen-victory', 'screen-gameover'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            const target = document.getElementById(screenId);
+            if (target) target.classList.remove('hidden');
+
+            const showHud = screenId === 'screen-arena';
+            ['hud-hearts', 'hud-stars', 'hud-wave', 'hud-combo'].forEach(hudId => {
+                const hudEl = document.getElementById(hudId);
+                if (hudEl) {
+                    if (showHud) {
+                        hudEl.classList.remove('hidden');
+                        hudEl.classList.add('flex');
+                    } else {
+                        hudEl.classList.add('hidden');
+                        hudEl.classList.remove('flex');
+                    }
+                }
+            });
+        }
+
+        function selectAvatar(type) {
+            playSoundEffect('click');
+            gameState.avatar = type;
+            const btnPutra = document.getElementById('avatar-btn-putra');
+            const btnPutri = document.getElementById('avatar-btn-putri');
+
+            if (type === 'putra') {
+                btnPutra.className = 'bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-3 flex flex-col items-center shadow-sm transition-all';
+                btnPutri.className = 'bg-white border-2 border-slate-200 hover:border-amber-400 rounded-2xl p-3 flex flex-col items-center transition-all';
+            } else {
+                btnPutri.className = 'bg-amber-50 border-2 border-amber-500 rounded-2xl p-3 flex flex-col items-center shadow-sm transition-all';
+                btnPutra.className = 'bg-white border-2 border-slate-200 hover:border-emerald-400 rounded-2xl p-3 flex flex-col items-center transition-all';
+            }
+        }
+
+        function selectGameMode(mode) {
+            playSoundEffect('click');
+            gameState.mode = mode;
+
+            document.querySelectorAll('.mode-card').forEach(card => {
+                card.className = 'mode-card bg-white border-2 border-slate-200 hover:border-emerald-400 rounded-2xl p-3.5 transition-all';
+                const check = card.querySelector('.mode-check');
+                if (check) check.className = 'fa-regular fa-circle text-slate-300 mode-check';
+            });
+
+            const activeCard = document.getElementById(`mode-btn-${mode}`);
+            if (activeCard) {
+                activeCard.className = 'mode-card bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-3.5 shadow-sm transition-all';
+                const activeCheck = activeCard.querySelector('.mode-check');
+                if (activeCheck) activeCheck.className = 'fa-solid fa-circle-check text-emerald-600 mode-check';
+            }
+        }
+
+        function updateHUD() {
+            // Hati (3 nyawa)
+            const heartsEl = document.getElementById('hud-hearts');
+            if (heartsEl) {
+                let html = '';
+                for (let i = 0; i < 3; i++) {
+                    html += i < gameState.hearts
+                        ? '<i class="fa-solid fa-heart text-red-500 text-sm"></i>'
+                        : '<i class="fa-regular fa-heart text-slate-300 text-sm"></i>';
+                }
+                heartsEl.innerHTML = html;
+            }
+
+            document.getElementById('hud-star-count').textContent = gameState.stars;
+            document.getElementById('hud-wave-text').textContent = `Wave ${gameState.wave}/${gameState.maxWaves}`;
+            document.getElementById('hud-combo-count').textContent = `${gameState.combo}x`;
+            document.getElementById('target-progress-badge').textContent = `Target ${gameState.waveTargetIndex + 1} / ${gameState.targetsPerWave}`;
+
+            const acc = gameState.totalShots > 0
+                ? Math.round((gameState.correctHits / gameState.totalShots) * 100)
+                : 100;
+            const accEl = document.getElementById('hud-accuracy-live');
+            if (accEl) accEl.textContent = `Akurasi: ${acc}%`;
+        }
+
+        // =================================================================
+        // 5. MULAI PERMAINAN & SPAWN GELEMBUNG SASARAN
+        // =================================================================
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            if (!container) return;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            cannon.x = canvas.width / 2;
+            cannon.y = canvas.height - 34;
+        }
+        window.addEventListener('resize', () => {
+            if (gameState.isRunning) resizeCanvas();
+        });
+
+        function startGame() {
+            unlockAudioContext();
+            playSoundEffect('levelup');
+
+            const nameInput = document.getElementById('santri-name-input');
+            const rawName = nameInput ? nameInput.value.trim() : '';
+            gameState.playerName = rawName.length > 0 ? rawName : (gameState.avatar === 'putra' ? 'Santri Putra' : 'Santri Putri');
+
+            gameState.wave = 1;
+            gameState.waveTargetIndex = 0;
+            gameState.stars = 0;
+            gameState.hearts = 3;
+            gameState.combo = 0;
+            gameState.totalShots = 0;
+            gameState.correctHits = 0;
+            gameState.isRunning = true;
+            gameState.isTransitioning = false;
+            gameState.usedIndices = [];
+
+            bubbles = [];
+            projectiles = [];
+            particles = [];
+            floatingTexts = [];
+
+            document.getElementById('arena-feedback-banner').classList.add('hidden');
+            document.getElementById('wave-announcement').classList.add('hidden');
+
+            switchScreen('screen-arena');
+            resizeCanvas();
+            updateHUD();
+            spawnNextTargetWave();
+
+            lastFrameTime = performance.now();
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        function getModePool() {
+            if (gameState.mode === 'mixed') {
+                return [
+                    ...TARGET_BANK.hijaiyah,
+                    ...TARGET_BANK.harakat,
+                    ...TARGET_BANK.tajwid
+                ];
+            }
+            return TARGET_BANK[gameState.mode] || TARGET_BANK.hijaiyah;
+        }
+
+        function spawnNextTargetWave() {
+            const pool = getModePool();
+            if (gameState.usedIndices.length >= pool.length) {
+                gameState.usedIndices = [];
+            }
+
+            let randomIdx;
+            do {
+                randomIdx = Math.floor(Math.random() * pool.length);
+            } while (gameState.usedIndices.includes(randomIdx) && gameState.usedIndices.length < pool.length);
+
+            gameState.usedIndices.push(randomIdx);
+            const targetItem = pool[randomIdx];
+            gameState.currentTarget = targetItem;
+
+            // Update Papan Soal Atas
+            document.getElementById('target-category-badge').textContent = targetItem.category;
+            document.getElementById('target-prompt-text').textContent = targetItem.prompt;
+            updateHUD();
+
+            // Bacakan soal secara otomatis jika Auto-Voice menyala
+            if (autoVoiceEnabled && !isMuted) {
+                setTimeout(() => speakCurrentTarget(false), 200);
+            }
+
+            // Siapkan 4 atau 5 gelembung (1 jawaban benar + 3..4 pengecoh)
+            const distractorCount = gameState.wave >= 3 ? 4 : 3;
+            const shuffledDistractors = [...targetItem.distractors]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, distractorCount);
+
+            const allLabels = [
+                { text: targetItem.arabic, isCorrect: true },
+                ...shuffledDistractors.map(d => ({ text: d, isCorrect: false }))
+            ].sort(() => Math.random() - 0.5);
+
+            bubbles = [];
+            const count = allLabels.length;
+            const marginX = Math.max(58, canvas.width * 0.12);
+            const usableWidth = canvas.width - marginX * 2;
+            const baseRadius = Math.min(48, Math.max(36, canvas.width / (count * 2.8)));
+
+            // Kecepatan jatuh lembut (ramah anak TPA)
+            const baseFallSpeed = 14 + (gameState.wave - 1) * 4.5;
+
+            allLabels.forEach((item, i) => {
+                const slotX = marginX + (usableWidth / Math.max(1, count - 1)) * i;
+                const jitterX = (Math.random() - 0.5) * 24;
+                const startY = 75 + (i % 2) * 42 + Math.random() * 20;
+                const palette = BUBBLE_PALETTES[i % BUBBLE_PALETTES.length];
+
+                bubbles.push({
+                    x: Math.min(canvas.width - baseRadius - 10, Math.max(baseRadius + 10, slotX + jitterX)),
+                    y: startY,
+                    radius: baseRadius,
+                    text: item.text,
+                    isCorrect: item.isCorrect,
+                    palette: palette,
+                    vx: (Math.random() - 0.5) * (22 + gameState.wave * 4),
+                    vy: baseFallSpeed + Math.random() * 6,
+                    wobblePhase: Math.random() * Math.PI * 2,
+                    shakeTimer: 0
+                });
+            });
+        }
+
+        function speakCurrentTarget(withChime = true) {
+            unlockAudioContext();
+            if (withChime) playSoundEffect('click');
+            if (!gameState.currentTarget) return;
+
+            const t = gameState.currentTarget;
+            speakText(t.phoneticId, 'id-ID', t.phoneticId);
+        }
+
+        function showArenaFeedback(message, isSuccess) {
+            const banner = document.getElementById('arena-feedback-banner');
+            const textEl = document.getElementById('arena-feedback-text');
+            textEl.textContent = message;
+
+            if (isSuccess) {
+                banner.className = 'absolute top-3 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-lg rounded-2xl px-4 py-2.5 shadow-lg border-2 border-emerald-400 bg-emerald-50 text-emerald-950 text-center font-semibold text-xs sm:text-sm animate-pop';
+            } else {
+                banner.className = 'absolute top-3 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-lg rounded-2xl px-4 py-2.5 shadow-lg border-2 border-amber-400 bg-amber-50 text-amber-950 text-center font-semibold text-xs sm:text-sm animate-pop';
+            }
+            banner.classList.remove('hidden');
+
+            clearTimeout(window.arenaFeedbackTimeout);
+            window.arenaFeedbackTimeout = setTimeout(() => {
+                banner.classList.add('hidden');
+            }, 3200);
+        }
+
+        // =================================================================
+        // 6. KONTROL PELUNCUR & TEMBAKAN CAHAYA (MOUSE, TOUCH & SPASI)
+        // =================================================================
+        function getCanvasCoordinates(evt) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            let clientX, clientY;
+            if (evt.touches && evt.touches.length > 0) {
+                clientX = evt.touches[0].clientX;
+                clientY = evt.touches[0].clientY;
+            } else {
+                clientX = evt.clientX;
+                clientY = evt.clientY;
+            }
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        function aimCannonAt(targetX, targetY) {
+            const dx = targetX - cannon.x;
+            const dy = targetY - cannon.y;
+            let angle = Math.atan2(dy, dx);
+            // Batasi sudut agar meriam selalu mengarah ke atas (-165 deg hingga -15 deg)
+            const minAngle = -Math.PI + 0.22;
+            const maxAngle = -0.22;
+            if (angle > 0) {
+                angle = dx < 0 ? minAngle : maxAngle;
+            } else {
+                angle = Math.max(minAngle, Math.min(maxAngle, angle));
+            }
+            cannon.angle = angle;
+        }
+
+        function fireLightOrb(targetX = null, targetY = null) {
+            if (!gameState.isRunning || gameState.isTransitioning) return;
+            unlockAudioContext();
+
+            if (targetX !== null && targetY !== null) {
+                // Jika anak mengetuk langsung gelembung, kunci bidikan tepat ke pusat gelembung tersebut!
+                const tappedBubble = bubbles.find(b => Math.hypot(targetX - b.x, targetY - b.y) <= b.radius + 14);
+                if (tappedBubble) {
+                    aimCannonAt(tappedBubble.x, tappedBubble.y);
+                } else {
+                    aimCannonAt(targetX, targetY);
+                }
+            }
+
+            playSoundEffect('shoot');
+            gameState.totalShots += 1;
+            cannon.recoil = 10;
+
+            const speed = 780;
+            const muzzleDist = 42;
+            const startX = cannon.x + Math.cos(cannon.angle) * muzzleDist;
+            const startY = cannon.y + Math.sin(cannon.angle) * muzzleDist;
+
+            projectiles.push({
+                x: startX,
+                y: startY,
+                vx: Math.cos(cannon.angle) * speed,
+                vy: Math.sin(cannon.angle) * speed,
+                radius: 10,
+                trail: []
+            });
+
+            updateHUD();
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!gameState.isRunning) return;
+            const pos = getCanvasCoordinates(e);
+            aimCannonAt(pos.x, pos.y);
+        });
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (!gameState.isRunning) return;
+            const pos = getCanvasCoordinates(e);
+            fireLightOrb(pos.x, pos.y);
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            if (!gameState.isRunning) return;
+            e.preventDefault();
+            const pos = getCanvasCoordinates(e);
+            fireLightOrb(pos.x, pos.y);
+        }, { passive: false });
+
+        document.addEventListener('keydown', (e) => {
+            if (!gameState.isRunning) return;
+            if (e.code === 'Space') {
+                e.preventDefault();
+                fireLightOrb();
+            } else if (e.code === 'ArrowLeft') {
+                cannon.angle = Math.max(-Math.PI + 0.22, cannon.angle - 0.12);
+            } else if (e.code === 'ArrowRight') {
+                cannon.angle = Math.min(-0.22, cannon.angle + 0.12);
+            }
+        });
+
+        // =================================================================
+        // 7. EFEK PARTIKEL LEDAKAN BINTANG & PENANGANAN TUMBUKAN
+        // =================================================================
+        function spawnBurstParticles(x, y, primaryColor) {
+            const colors = [primaryColor, '#fbbf24', '#10b981', '#ffffff', '#38bdf8'];
+            for (let i = 0; i < 24; i++) {
+                const angle = (Math.PI * 2 * i) / 24 + (Math.random() - 0.5) * 0.3;
+                const speed = 90 + Math.random() * 210;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    size: 4 + Math.random() * 5,
+                    color: colors[i % colors.length],
+                    life: 1.0
+                });
+            }
+        }
+
+        function addFloatingScoreText(x, y, text, color) {
+            floatingTexts.push({
+                x: x,
+                y: y,
+                text: text,
+                color: color,
+                life: 1.0
+            });
+        }
+
+        function handleBubbleHit(bubble, bubbleIndex) {
+            if (bubble.isCorrect) {
+                // TEMBAKAN TEPAT!
+                playSoundEffect('hit');
+                gameState.correctHits += 1;
+                gameState.combo += 1;
+                const earned = gameState.combo >= 3 ? 15 : 10;
+                gameState.stars += earned;
+
+                spawnBurstParticles(bubble.x, bubble.y, '#fbbf24');
+                addFloatingScoreText(bubble.x, bubble.y - 15, `+${earned} ⭐`, '#047857');
+                showArenaFeedback(`MasyaAllah Benar! ${gameState.currentTarget.tip}`, true);
+
+                // Ucapkan lafaz Arab yang benar
+                if (!isMuted) {
+                    speakText(gameState.currentTarget.speak, 'ar-SA', gameState.currentTarget.phoneticId);
+                }
+
+                // Bersihkan gelembung & lanjut target berikutnya
+                bubbles = [];
+                projectiles = [];
+                gameState.isTransitioning = true;
+                updateHUD();
+
+                setTimeout(() => {
+                    if (!gameState.isRunning) return;
+                    gameState.waveTargetIndex += 1;
+
+                    if (gameState.waveTargetIndex >= gameState.targetsPerWave) {
+                        // Gelombang selesai!
+                        if (gameState.wave >= gameState.maxWaves) {
+                            triggerVictory();
+                            return;
+                        } else {
+                            gameState.wave += 1;
+                            gameState.waveTargetIndex = 0;
+                            announceNextWave();
+                        }
+                    } else {
+                        gameState.isTransitioning = false;
+                        spawnNextTargetWave();
+                    }
+                }, 950);
+
+            } else {
+                // TEMBAKAN SALAH SASARAN!
+                playSoundEffect('wrong');
+                gameState.combo = 0;
+                gameState.hearts -= 1;
+                bubble.shakeTimer = 0.45;
+
+                spawnBurstParticles(bubble.x, bubble.y, '#f43f5e');
+                addFloatingScoreText(bubble.x, bubble.y - 15, 'Bukan yang itu!', '#be123c');
+                showArenaFeedback(`Kurang tepat! Itu "${bubble.text}". Ingat: ${gameState.currentTarget.tip}`, false);
+
+                // Hapus gelembung pengecoh yang tertembak agar anak lebih mudah menemukan yang benar
+                bubbles.splice(bubbleIndex, 1);
+                updateHUD();
+
+                if (gameState.hearts <= 0) {
+                    setTimeout(() => {
+                        triggerGameOver();
+                    }, 700);
+                }
+            }
+        }
+
+        function announceNextWave() {
+            playSoundEffect('levelup');
+            const waveModal = document.getElementById('wave-announcement');
+            document.getElementById('wave-announce-title').textContent = `Wave ${gameState.wave} Dimulai!`;
+            waveModal.classList.remove('hidden');
+            updateHUD();
+
+            setTimeout(() => {
+                waveModal.classList.add('hidden');
+                gameState.isTransitioning = false;
+                spawnNextTargetWave();
+            }, 1500);
+        }
+
+        // =================================================================
+        // 8. RENDER & UPDATE LOOP KANVAS (60 FPS)
+        // =================================================================
+        function updateGame(dt) {
+            if (cannon.recoil > 0) {
+                cannon.recoil = Math.max(0, cannon.recoil - dt * 45);
+            }
+
+            // Update posisi peluru cahaya
+            for (let i = projectiles.length - 1; i >= 0; i--) {
+                const p = projectiles[i];
+                p.trail.push({ x: p.x, y: p.y });
+                if (p.trail.length > 7) p.trail.shift();
+
+                p.x += p.vx * dt;
+                p.y += p.vy * dt;
+
+                // Cek tabrakan peluru dengan gelembung
+                let hitOccurred = false;
+                for (let j = bubbles.length - 1; j >= 0; j--) {
+                    const b = bubbles[j];
+                    const dist = Math.hypot(p.x - b.x, p.y - b.y);
+                    if (dist <= p.radius + b.radius) {
+                        projectiles.splice(i, 1);
+                        handleBubbleHit(b, j);
+                        hitOccurred = true;
+                        break;
+                    }
+                }
+
+                if (!hitOccurred && (p.y < -30 || p.x < -30 || p.x > canvas.width + 30)) {
+                    projectiles.splice(i, 1);
+                }
+            }
+
+            // Update gelembung mengapung
+            const bottomBoundary = canvas.height - 95;
+            for (let i = 0; i < bubbles.length; i++) {
+                const b = bubbles[i];
+                b.wobblePhase += dt * 2.4;
+                b.x += (b.vx + Math.sin(b.wobblePhase) * 18) * dt;
+                b.y += b.vy * dt;
+
+                if (b.shakeTimer > 0) {
+                    b.shakeTimer = Math.max(0, b.shakeTimer - dt);
+                }
+
+                // Pantulkan di dinding kiri & kanan
+                if (b.x - b.radius < 12) {
+                    b.x = 12 + b.radius;
+                    b.vx = Math.abs(b.vx);
+                } else if (b.x + b.radius > canvas.width - 12) {
+                    b.x = canvas.width - 12 - b.radius;
+                    b.vx = -Math.abs(b.vx);
+                }
+
+                // Jika gelembung menyentuh batas bawah, naikkan kembali ke atas dengan lembut
+                if (b.y + b.radius > bottomBoundary) {
+                    b.y = 65;
+                }
+            }
+
+            // Update partikel ledakan bintang
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const pt = particles[i];
+                pt.x += pt.vx * dt;
+                pt.y += pt.vy * dt;
+                pt.vy += 240 * dt; // Gravitasi ringan
+                pt.life -= dt * 1.6;
+                if (pt.life <= 0) particles.splice(i, 1);
+            }
+
+            // Update teks poin melayang
+            for (let i = floatingTexts.length - 1; i >= 0; i--) {
+                const ft = floatingTexts[i];
+                ft.y -= 42 * dt;
+                ft.life -= dt * 1.1;
+                if (ft.life <= 0) floatingTexts.splice(i, 1);
+            }
+        }
+
+        function drawArenaBackground() {
+            // Langit cerah Islami
+            const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            skyGrad.addColorStop(0, '#bae6fd');
+            skyGrad.addColorStop(0.55, '#e0f2fe');
+            skyGrad.addColorStop(1, '#d1fae5');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Bulan sabit & bintang lembut di sudut kanan atas
+            ctx.save();
+            ctx.fillStyle = 'rgba(251, 191, 36, 0.35)';
+            ctx.beginPath();
+            ctx.arc(canvas.width - 75, 65, 28, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#bae6fd';
+            ctx.beginPath();
+            ctx.arc(canvas.width - 64, 57, 23, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Siluet kubah masjid hijau lembut di cakrawala bawah
+            const baseY = canvas.height - 22;
+            ctx.save();
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.16)';
+            // Kubah tengah
+            ctx.beginPath();
+            ctx.arc(canvas.width * 0.5, baseY - 25, 68, Math.PI, 0);
+            ctx.fill();
+            ctx.fillRect(canvas.width * 0.5 - 85, baseY - 25, 170, 30);
+            // Menara kiri & kanan
+            ctx.fillRect(canvas.width * 0.5 - 115, baseY - 75, 18, 80);
+            ctx.fillRect(canvas.width * 0.5 + 97, baseY - 75, 18, 80);
+            ctx.restore();
+
+            // Hamparan rumput hijau zamrud bawah
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(0, canvas.height - 24, canvas.width, 24);
+            ctx.fillStyle = '#059669';
+            ctx.fillRect(0, canvas.height - 10, canvas.width, 10);
+        }
+
+        function drawBubbles() {
+            bubbles.forEach(b => {
+                ctx.save();
+                const shakeOffset = b.shakeTimer > 0 ? Math.sin(b.shakeTimer * 55) * 6 : 0;
+                ctx.translate(b.x + shakeOffset, b.y);
+
+                // Cahaya luar gelembung
+                ctx.beginPath();
+                ctx.arc(0, 0, b.radius + 6, 0, Math.PI * 2);
+                ctx.fillStyle = b.palette.glow;
+                ctx.fill();
+
+                // Badan gelembung utama
+                ctx.beginPath();
+                ctx.arc(0, 0, b.radius, 0, Math.PI * 2);
+                ctx.fillStyle = b.palette.fill;
+                ctx.fill();
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = b.palette.stroke;
+                ctx.stroke();
+
+                // Kilau gelembung (highlight atas kiri)
+                ctx.beginPath();
+                ctx.ellipse(-b.radius * 0.35, -b.radius * 0.35, b.radius * 0.22, b.radius * 0.12, -Math.PI / 4, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+                ctx.fill();
+
+                // Teks Arab (Font Amiri) otomatis menyesuaikan ukuran jika lafaz panjang
+                const isLongPhrase = b.text.length >= 6;
+                const fontSize = isLongPhrase ? Math.round(b.radius * 0.52) : Math.round(b.radius * 0.85);
+                ctx.font = `bold ${fontSize}px "Amiri", serif`;
+                ctx.fillStyle = b.palette.text;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(b.text, 0, 4);
+
+                ctx.restore();
+            });
+        }
+
+        function drawProjectiles() {
+            projectiles.forEach(p => {
+                // Jejak cahaya ekor
+                p.trail.forEach((tr, idx) => {
+                    const ratio = (idx + 1) / p.trail.length;
+                    ctx.beginPath();
+                    ctx.arc(tr.x, tr.y, p.radius * ratio * 0.8, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(251, 191, 36, ${ratio * 0.45})`;
+                    ctx.fill();
+                });
+
+                // Inti bola cahaya emas
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#fbbf24';
+                ctx.fill();
+                ctx.lineWidth = 2.5;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+            });
+        }
+
+        function drawCannon() {
+            ctx.save();
+            ctx.translate(cannon.x, cannon.y);
+
+            // Garis bidik putus-putus lembut
+            ctx.save();
+            ctx.rotate(cannon.angle);
+            ctx.strokeStyle = 'rgba(5, 150, 105, 0.35)';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([8, 8]);
+            ctx.beginPath();
+            ctx.moveTo(46, 0);
+            ctx.lineTo(150, 0);
+            ctx.stroke();
+            ctx.restore();
+
+            // Laras Peluncur Cahaya
+            ctx.save();
+            ctx.rotate(cannon.angle);
+            const recoilOffset = -cannon.recoil;
+            ctx.fillStyle = '#047857';
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.roundRect(recoilOffset, -13, 44, 26, 10);
+            ctx.fill();
+            ctx.stroke();
+
+            // Ujung laras emas
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath();
+            ctx.roundRect(recoilOffset + 34, -15, 12, 30, 6);
+            ctx.fill();
+            ctx.restore();
+
+            // Kubah Dasar Meriam
+            ctx.beginPath();
+            ctx.arc(0, 6, 26, Math.PI, 0);
+            ctx.fillStyle = '#059669';
+            ctx.fill();
+            ctx.lineWidth = 3.5;
+            ctx.strokeStyle = '#fbbf24';
+            ctx.stroke();
+
+            // Bintang Tengah Meriam
+            ctx.fillStyle = '#fde68a';
+            ctx.beginPath();
+            ctx.arc(0, -4, 7, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawParticlesAndTexts() {
+            particles.forEach(pt => {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, pt.life);
+                ctx.fillStyle = pt.color;
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            floatingTexts.forEach(ft => {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, ft.life);
+                ctx.font = 'bold 20px "Fredoka", sans-serif';
+                ctx.fillStyle = ft.color;
+                ctx.textAlign = 'center';
+                ctx.fillText(ft.text, ft.x, ft.y);
+                ctx.restore();
+            });
+        }
+
+        function gameLoop(timestamp) {
+            if (!gameState.isRunning) return;
+
+            const dt = Math.min(0.05, (timestamp - lastFrameTime) / 1000);
+            lastFrameTime = timestamp;
+
+            updateGame(dt);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawArenaBackground();
+            drawBubbles();
+            drawProjectiles();
+            drawCannon();
+            drawParticlesAndTexts();
+
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        // =================================================================
+        // 9. LAYAR KEMENANGAN & GAME OVER
+        // =================================================================
+        function triggerVictory() {
+            gameState.isRunning = false;
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+            playSoundEffect('victory');
+
+            const accuracy = gameState.totalShots > 0
+                ? Math.min(100, Math.round((gameState.correctHits / gameState.totalShots) * 100))
+                : 100;
+
+            let rank = 'Jayyid (Baik)';
+            if (accuracy >= 85) rank = 'Mumtaz (Istimewa)';
+            else if (accuracy >= 65) rank = 'Jayyid Jiddan';
+
+            document.getElementById('victory-player-name').textContent = gameState.playerName;
+            document.getElementById('cert-player-name').textContent = gameState.playerName;
+            document.getElementById('victory-stars').textContent = `${gameState.stars} ⭐`;
+            document.getElementById('victory-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('victory-rank').textContent = rank;
+
+            switchScreen('screen-victory');
+            launchConfetti();
+            speakText(`Alhamdulillah, selamat ${gameState.playerName}! Kamu berhasil menuntaskan Tembak Kata Hijaiyah dan Tajwid!`, 'id-ID', `Alhamdulillah, selamat ${gameState.playerName}! Kamu berhasil menuntaskan Tembak Kata Hijaiyah dan Tajwid!`);
+        }
+
+        function triggerGameOver() {
+            gameState.isRunning = false;
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+            document.getElementById('gameover-player-name').textContent = gameState.playerName;
+            document.getElementById('gameover-stars').textContent = `${gameState.stars} ⭐`;
+            switchScreen('screen-gameover');
+        }
+
+        function resetToSetup() {
+            playSoundEffect('click');
+            stopConfetti();
+            gameState.isRunning = false;
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            switchScreen('screen-setup');
+        }
+
+        // Animasi Konfeti Kemenangan
+        let confettiAnimId = null;
+        function launchConfetti() {
+            const cCanvas = document.getElementById('confetti-canvas');
+            const cCtx = cCanvas.getContext('2d');
+            cCanvas.width = window.innerWidth;
+            cCanvas.height = window.innerHeight;
+
+            const colors = ['#10b981', '#f59e0b', '#fbbf24', '#0ea5e9', '#34d399'];
+            const pieces = Array.from({ length: 95 }, () => ({
+                x: Math.random() * cCanvas.width,
+                y: Math.random() * cCanvas.height - cCanvas.height,
+                size: Math.random() * 9 + 5,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedY: Math.random() * 3 + 2,
+                speedX: Math.random() * 2 - 1,
+                rotation: Math.random() * 360
+            }));
+
+            function renderConfetti() {
+                cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+                pieces.forEach(p => {
+                    cCtx.save();
+                    cCtx.translate(p.x, p.y);
+                    cCtx.rotate((p.rotation * Math.PI) / 180);
+                    cCtx.fillStyle = p.color;
+                    cCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                    cCtx.restore();
+
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rotation += 3;
+
+                    if (p.y > cCanvas.height) {
+                        p.y = -20;
+                        p.x = Math.random() * cCanvas.width;
+                    }
+                });
+                confettiAnimId = requestAnimationFrame(renderConfetti);
+            }
+            renderConfetti();
+        }
+
+        function stopConfetti() {
+            if (confettiAnimId) {
+                cancelAnimationFrame(confettiAnimId);
+                confettiAnimId = null;
+            }
+            const cCanvas = document.getElementById('confetti-canvas');
+            const cCtx = cCanvas.getContext('2d');
+            cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+        }
+    </script>
+</body>
+</html>

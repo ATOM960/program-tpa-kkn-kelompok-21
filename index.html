@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerakan Mengaji Ceria — Pendampingan Belajar Al-Quran Santri TPA</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Fredoka (Ramah Anak & Ceria) + Plus Jakarta Sans (Jelas & Modern) + Amiri (Kaligrafi Arab) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Fredoka', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        gold: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        skysoft: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 4s ease-in-out infinite',
+                        'float-delayed': 'float 5s ease-in-out 2s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Pola Geometri Islami Lembut pada Latar Belakang */
+        .islamic-pattern {
+            background-color: #ecfdf5;
+            background-image: radial-gradient(#10b981 0.85px, transparent 0.85px), radial-gradient(#f59e0b 0.85px, #ecfdf5 0.85px);
+            background-size: 36px 36px;
+            background-position: 0 0, 18px 18px;
+        }
+        
+        /* Efek Kartu Timbul Ramah Anak */
+        .playful-card {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .playful-card:hover {
+            transform: translateY(-6px);
+        }
+        
+        /* Efek Tombol 3D Ceria */
+        .btn-3d-emerald {
+            box-shadow: 0 5px 0 #047857;
+            transition: all 0.15s ease;
+        }
+        .btn-3d-emerald:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #047857;
+        }
+
+        .btn-3d-gold {
+            box-shadow: 0 5px 0 #b45309;
+            transition: all 0.15s ease;
+        }
+        .btn-3d-gold:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #b45309;
+        }
+
+        .btn-3d-sky {
+            box-shadow: 0 5px 0 #0369a1;
+            transition: all 0.15s ease;
+        }
+        .btn-3d-sky:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #0369a1;
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-800 bg-slate-50 antialiased selection:bg-gold-300 selection:text-emerald-900">
+
+    <!-- =====================================================================
+         NAVBAR UTAMA (Sticky & Responsif)
+    ====================================================================== -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-emerald-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo & Identitas Program -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shadow-md group-hover:rotate-6 transition-transform">
+                        <i class="fa-solid fa-book-quran text-2xl text-gold-300"></i>
+                    </div>
+                    <div>
+                        <span class="font-display font-bold text-lg sm:text-xl text-emerald-800 tracking-tight block leading-none">
+                            MENGAJI CERIA
+                        </span>
+                        <span class="text-xs font-semibold text-emerald-600 tracking-wide">
+                            Program Kerja KKN • TPA Al-Ikhlas
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Menu Navigasi Desktop -->
+                <nav class="hidden md:flex items-center gap-7 font-semibold text-sm text-slate-600">
+                    <a href="index.html" class="hover:text-emerald-600 transition-colors">Beranda</a>
+                    <a href="#arena-game" class="text-emerald-700 bg-emerald-50 px-3.5 py-2 rounded-xl hover:bg-emerald-100 transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-gamepad text-gold-500"></i> Arena Game
+                    </a>
+                    <a href="#kurikulum" class="hover:text-emerald-600 transition-colors">Materi Mengaji</a>
+                    <!-- <a href="#bintang-santri" class="hover:text-emerald-600 transition-colors">Papan Bintang</a> -->
+                </nav>
+
+                <!-- Tombol Aksi Cepat & Menu Mobile -->
+                <div class="flex items-center gap-3">
+                    <a href="#arena-game" class="hidden sm:inline-flex items-center gap-2 bg-gold-400 hover:bg-gold-500 text-emerald-950 font-display font-bold text-sm px-5 py-2.5 rounded-2xl btn-3d-gold">
+                        <i class="fa-solid fa-rocket"></i> Mulai Belajar
+                    </a>
+                    <button id="mobile-menu-btn" aria-label="Buka Menu" class="md:hidden p-3 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dropdown Menu Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-emerald-100 px-4 pt-3 pb-5 space-y-2 shadow-lg">
+            <a href="index.html" class="block px-4 py-3 rounded-xl font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">Beranda</a>
+            <a href="#arena-game" class="block px-4 py-3 rounded-xl font-bold bg-emerald-50 text-emerald-700">🎮 Arena Game Edukasi</a>
+            <a href="#kurikulum" class="block px-4 py-3 rounded-xl font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">📖 Kurikulum & Materi TPA</a>
+            <a href="#bintang-santri" class="block px-4 py-3 rounded-xl font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">⭐ Papan Bintang Santri</a>
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         1. HERO SECTION (Sambutan Ceria & Statistik Program)
+    ====================================================================== -->
+    <section id="beranda" class="relative overflow-hidden islamic-pattern pt-10 pb-16 sm:pt-16 sm:pb-24 border-b-4 border-emerald-200/70">
+        <!-- Dekorasi Awan & Bintang Mengambang -->
+        <div class="hidden lg:block absolute top-12 left-10 text-gold-400/50 text-5xl animate-float">
+            <i class="fa-solid fa-star-and-crescent"></i>
+        </div>
+        <div class="hidden lg:block absolute bottom-14 right-14 text-skysoft-500/30 text-6xl animate-float-delayed">
+            <i class="fa-solid fa-cloud"></i>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                
+                <!-- Kolom Teks Utama -->
+                <div class="lg:col-span-7 text-center lg:text-left">
+                    <!-- Salam Pembuka -->
+                    <div class="inline-flex items-center gap-2.5 bg-white border-2 border-emerald-200 px-4 py-2 rounded-full shadow-sm mb-6">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span class="font-arabic text-lg font-bold text-emerald-800">اَلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</span>
+                    </div>
+
+                    <h1 class="font-display font-bold text-3xl sm:text-5xl lg:text-[3.25rem] text-emerald-900 leading-tight mb-5">
+                        GERAKAN MENGAJI CERIA:
+                        <span class="block text-emerald-600 mt-1">
+                            PENDAMPINGAN BELAJAR AL-QURAN UNTUK SANTRI (TPA)
+                        </span>
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-8 font-medium">
+                        Belajar membaca Al-Quran, mengenal huruf hijaiyah, menghafal surat pendek, hingga memahami tajwid kini terasa seperti petualangan seru! Mari bergabung bersama kakak-kakak mahasiswa KKN untuk menjadi generasi Qurani yang cerdas dan berakhlak mulia.
+                    </p>
+
+                    <!-- Tombol CTA Utama -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10">
+                        <a href="#arena-game" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-lg px-8 py-4 rounded-2xl btn-3d-emerald">
+                            <i class="fa-solid fa-gamepad text-gold-300 text-xl"></i>
+                            Mulai Bermain & Belajar
+                        </a>
+                        <a href="#kurikulum" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-gold-50 text-emerald-800 border-2 border-emerald-200 font-display font-bold text-base px-7 py-4 rounded-2xl shadow-sm transition-all">
+                            <i class="fa-solid fa-book-open text-gold-500"></i>
+                            Lihat Materi TPA
+                        </a>
+                    </div>
+
+                    <!-- Statistik Ringkas Program KKN -->
+                    <div class="grid grid-cols-3 gap-3 sm:gap-5 max-w-xl mx-auto lg:mx-0">
+                        <div class="bg-white/95 backdrop-blur rounded-2xl p-4 border-2 border-emerald-100 shadow-sm text-center">
+                            <div class="font-display font-bold text-2xl sm:text-3xl text-emerald-600" data-counter="68">68+</div>
+                            <div class="text-xs sm:text-sm font-bold text-slate-600 mt-1">Santri Aktif TPA</div>
+                        </div>
+                        <div class="bg-white/95 backdrop-blur rounded-2xl p-4 border-2 border-gold-200 shadow-sm text-center">
+                            <div class="font-display font-bold text-2xl sm:text-3xl text-gold-600">Iqro 1–6</div>
+                            <div class="text-xs sm:text-sm font-bold text-slate-600 mt-1">& Juz Amma</div>
+                        </div>
+                        <div class="bg-white/95 backdrop-blur rounded-2xl p-4 border-2 border-skysoft-100 shadow-sm text-center">
+                            <div class="font-display font-bold text-2xl sm:text-3xl text-skysoft-600">3 Game</div>
+                            <div class="text-xs sm:text-sm font-bold text-slate-600 mt-1">Modul Interaktif</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kolom Ilustrasi SVG Ramah Anak -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-md bg-white rounded-[2.5rem] p-6 sm:p-8 border-4 border-emerald-200 shadow-xl animate-float">
+                        <!-- Lencana KKN -->
+                        <div class="absolute -top-4 -right-3 bg-gold-400 text-emerald-950 font-display font-bold text-xs sm:text-sm px-4 py-2 rounded-2xl shadow-md rotate-3 border-2 border-white">
+                            ✨ Edisi Edukasi Digital TPA
+                        </div>
+
+                        <!-- Ilustrasi SVG Tema Mengaji & Ceria -->
+                        <svg viewBox="0 0 400 320" class="w-full h-auto rounded-2xl bg-gradient-to-b from-skysoft-100 to-emerald-50 p-4" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Matahari / Bulan Emas -->
+                            <circle cx="325" cy="65" r="32" fill="#FBBF24" opacity="0.9"/>
+                            <circle cx="338" cy="56" r="26" fill="#E0F2FE"/>
+                            <!-- Awan Lembut -->
+                            <g fill="#FFFFFF" opacity="0.9">
+                                <circle cx="75" cy="70" r="20"/>
+                                <circle cx="98" cy="65" r="25"/>
+                                <circle cx="122" cy="72" r="18"/>
+                            </g>
+                            <!-- Kubah Masjid Latar Belakang -->
+                            <path d="M130 220 C130 140, 270 140, 270 220 Z" fill="#10B981"/>
+                            <rect x="197" y="122" width="6" height="22" fill="#D97706"/>
+                            <circle cx="200" cy="118" r="7" fill="#F59E0B"/>
+                            <rect x="115" y="218" width="170" height="45" rx="8" fill="#059669"/>
+                            <!-- Menara Kiri & Kanan -->
+                            <rect x="82" y="155" width="24" height="108" rx="4" fill="#34D399"/>
+                            <path d="M80 155 L94 130 L108 155 Z" fill="#F59E0B"/>
+                            <rect x="294" y="155" width="24" height="108" rx="4" fill="#34D399"/>
+                            <path d="M292 155 L306 130 L320 155 Z" fill="#F59E0B"/>
+                            <!-- Meja Rehal & Mushaf Al-Quran Terbuka -->
+                            <path d="M145 275 L200 245 L255 275" stroke="#B45309" stroke-width="10" stroke-linecap="round" fill="none"/>
+                            <path d="M135 232 Q168 220 200 238 Q232 220 265 232 L260 258 Q230 246 200 262 Q170 246 140 258 Z" fill="#FFFFFF" stroke="#F59E0B" stroke-width="4"/>
+                            <!-- Garis Teks Ayat -->
+                            <line x1="152" y1="241" x2="188" y2="243" stroke="#059669" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="154" y1="249" x2="185" y2="251" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="212" y1="243" x2="248" y2="241" stroke="#059669" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="215" y1="251" x2="246" y2="249" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Bintang-bintang Ceria -->
+                            <polygon points="65,130 68,138 77,138 70,143 72,151 65,146 58,151 60,143 53,138 62,138" fill="#F59E0B"/>
+                            <polygon points="340,125 342,131 349,131 344,135 346,141 340,137 334,141 336,135 331,131 338,131" fill="#F59E0B"/>
+                        </svg>
+
+                        <div class="mt-5 text-center">
+                            <p class="font-arabic text-2xl font-bold text-emerald-800">خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ</p>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-1 italic">
+                                "Sebaik-baik kalian adalah orang yang belajar Al-Quran dan mengajarkannya." (HR. Bukhari)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         2. PORTAL ARENA GAME EDUKASI INTERAKTIF (BAGIAN UTAMA)
+         Menghubungkan langsung ke: game_new.html, peta.html, tembak.html
+    ====================================================================== -->
+    <section id="arena-game" class="py-16 sm:py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Header Bagian -->
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="inline-flex items-center gap-2 bg-gold-100 text-gold-600 font-display font-bold text-xs sm:text-sm px-4 py-1.5 rounded-full uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-trophy"></i> Wahana Belajar Interaktif
+                </span>
+                <h2 class="font-display font-bold text-3xl sm:text-4xl text-emerald-900 mb-4">
+                    Portal Arena Game Edukasi Santri
+                </h2>
+                <p class="text-slate-600 text-base sm:text-lg">
+                    Pilih permainan edukatif favoritmu di bawah ini! Klik <strong>"Mainkan Sekarang"</strong> untuk langsung masuk ke permainan, atau klik <strong>"Info Cara Main"</strong> untuk melihat panduan terlebih dahulu.
+                </p>
+            </div>
+
+            <!-- Grid 3 Kartu Game Utama -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <!-- KARTU 1: Petualangan Mengaji -> game_new.html -->
+                <article class="playful-card bg-gradient-to-b from-emerald-50 to-white rounded-[2rem] border-2 border-emerald-200 shadow-lg overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <!-- Banner Visual Kartu -->
+                        <div class="relative h-48 bg-gradient-to-br from-emerald-500 to-emerald-700 p-6 flex flex-col justify-between overflow-hidden">
+                            <!-- Dekorasi Huruf Hijaiyah -->
+                            <div class="absolute -right-4 -bottom-6 font-arabic text-8xl text-white/15 select-none pointer-events-none">
+                                ا ب ت
+                            </div>
+                            <div class="flex items-center justify-between relative z-10">
+                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-gold-300"></span> Modul 01
+                                </span>
+                                <!-- Badge Status File Lokal -->
+                                <span class="bg-emerald-950/60 text-emerald-100 font-mono text-[11px] px-2.5 py-1 rounded-lg border border-emerald-400/30">
+                                    
+                                </span>
+                            </div>
+                            <div class="relative z-10 flex items-center gap-4">
+                                <div class="w-16 h-16 rounded-2xl bg-white text-emerald-600 flex items-center justify-center shadow-md text-3xl">
+                                    <i class="fa-solid fa-book-open-reader"></i>
+                                </div>
+                                <div>
+                                    <span class="text-gold-300 text-xs font-bold uppercase tracking-wider">Level Dasar • Iqro</span>
+                                    <h3 class="font-display font-bold text-2xl text-white leading-tight">
+                                        Petualangan Mengaji
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Konten Deskripsi -->
+                        <div class="p-6">
+                            <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-4">
+                                Game interaktif pengenalan huruf hijaiyah, harakat, dan kuis dasar mengaji. Cocok untuk santri pemula yang ingin melancarkan bacaan huruf berharakat fathah, kasrah, dan dhammah.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                <span class="text-xs font-semibold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Huruf Hijaiyah</span>
+                                <span class="text-xs font-semibold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Tanda Harakat</span>
+                                <span class="text-xs font-semibold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Kuis Interaktif</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi Kartu 1 -->
+                    <div class="p-6 pt-0 space-y-3">
+                        <a href="Petualangan.html" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-base py-3.5 px-5 rounded-2xl btn-3d-emerald">
+                            <i class="fa-solid fa-play"></i> Mainkan Sekarang
+                        </a>
+                        <button type="button" onclick="openGameModal('petualangan')" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold text-sm py-2.5 px-4 rounded-xl transition-colors">
+                            <i class="fa-solid fa-circle-info text-emerald-600"></i> Pratinjau / Info Cara Main
+                        </button>
+                    </div>
+                </article>
+
+                <!-- KARTU 2: Peta Jelajah Santri -> peta.html -->
+                <article class="playful-card bg-gradient-to-b from-skysoft-50 to-white rounded-[2rem] border-2 border-skysoft-100 shadow-lg overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <!-- Banner Visual Kartu -->
+                        <div class="relative h-48 bg-gradient-to-br from-skysoft-500 to-skysoft-600 p-6 flex flex-col justify-between overflow-hidden">
+                            <div class="absolute -right-3 -bottom-5 text-white/15 text-8xl select-none pointer-events-none">
+                                <i class="fa-solid fa-compass"></i>
+                            </div>
+                            <div class="flex items-center justify-between relative z-10">
+                                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-gold-300"></span> Modul 02
+                                </span>
+                                <!-- Badge Status File Lokal -->
+                                <span class="bg-sky-950/50 text-sky-100 font-mono text-[11px] px-2.5 py-1 rounded-lg border border-sky-200/30">
+                                </span>
+                            </div>
+                            <div class="relative z-10 flex items-center gap-4">
+                                <div class="w-16 h-16 rounded-2xl bg-white text-skysoft-600 flex items-center justify-center shadow-md text-3xl">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                </div>
+                                <div>
+                                    <span class="text-gold-300 text-xs font-bold uppercase tracking-wider">Misi Pos • Juz Amma</span>
+                                    <h3 class="font-display font-bold text-2xl text-white leading-tight">
+                                        Peta Jelajah Santri
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Konten Deskripsi -->
+                        <div class="p-6">
+                            <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-4">
+                                Petualangan menelusuri peta pos belajar Al-Quran dan tantangan hafalan surat pendek. Selesaikan misi di setiap pos masjid untuk mengumpulkan lencana hafidz cilik!
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                <span class="text-xs font-semibold bg-skysoft-100 text-skysoft-600 px-3 py-1 rounded-full">Jelajah Peta</span>
+                                <span class="text-xs font-semibold bg-skysoft-100 text-skysoft-600 px-3 py-1 rounded-full">Surat Pendek</span>
+                                <span class="text-xs font-semibold bg-skysoft-100 text-skysoft-600 px-3 py-1 rounded-full">Misi Pos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi Kartu 2 -->
+                    <div class="p-6 pt-0 space-y-3">
+                        <a href="peta.html" class="w-full inline-flex items-center justify-center gap-2 bg-skysoft-500 hover:bg-skysoft-600 text-white font-display font-bold text-base py-3.5 px-5 rounded-2xl btn-3d-sky">
+                            <i class="fa-solid fa-play"></i> Mainkan Sekarang
+                        </a>
+                        <button type="button" onclick="openGameModal('peta')" class="w-full inline-flex items-center justify-center gap-2 bg-skysoft-50 hover:bg-skysoft-100 text-skysoft-600 font-semibold text-sm py-2.5 px-4 rounded-xl transition-colors">
+                            <i class="fa-solid fa-circle-info"></i> Pratinjau / Info Cara Main
+                        </button>
+                    </div>
+                </article>
+
+                <!-- KARTU 3: Tembak Kata Hijaiyah & Tajwid -> tembak.html -->
+                <article class="playful-card bg-gradient-to-b from-gold-50 to-white rounded-[2rem] border-2 border-gold-200 shadow-lg overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <!-- Banner Visual Kartu -->
+                        <div class="relative h-48 bg-gradient-to-br from-gold-500 to-amber-600 p-6 flex flex-col justify-between overflow-hidden">
+                            <div class="absolute -right-3 -bottom-5 text-white/15 text-8xl select-none pointer-events-none">
+                                <i class="fa-solid fa-bullseye"></i>
+                            </div>
+                            <div class="flex items-center justify-between relative z-10">
+                                <span class="bg-white/25 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-white"></span> Modul 03
+                                </span>
+                                <!-- Badge Status File Lokal -->
+                                <span class="bg-amber-950/60 text-amber-100 font-mono text-[11px] px-2.5 py-1 rounded-lg border border-amber-200/30">
+                                    
+                                </span>
+                            </div>
+                            <div class="relative z-10 flex items-center gap-4">
+                                <div class="w-16 h-16 rounded-2xl bg-white text-gold-600 flex items-center justify-center shadow-md text-3xl">
+                                    <i class="fa-solid fa-crosshairs"></i>
+                                </div>
+                                <div>
+                                    <span class="text-amber-100 text-xs font-bold uppercase tracking-wider">Ketangkasan • Tajwid</span>
+                                    <h3 class="font-display font-bold text-xl sm:text-2xl text-white leading-tight">
+                                        Tembak Kata Hijaiyah & Tajwid
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Konten Deskripsi -->
+                        <div class="p-6">
+                            <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-4">
+                                Uji ketangkasan mencocokkan dan menembak kosakata Arab, huruf hijaiyah, dan hukum tajwid sebelum waktu habis. Raih skor tertinggi dan latih fokusmu!
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                <span class="text-xs font-semibold bg-gold-100 text-gold-600 px-3 py-1 rounded-full">Kosakata Arab</span>
+                                <span class="text-xs font-semibold bg-gold-100 text-gold-600 px-3 py-1 rounded-full">Hukum Tajwid</span>
+                                <span class="text-xs font-semibold bg-gold-100 text-gold-600 px-3 py-1 rounded-full">Uji Fokus</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi Kartu 3 -->
+                    <div class="p-6 pt-0 space-y-3">
+                        <a href="tembak.html" class="w-full inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-white font-display font-bold text-base py-3.5 px-5 rounded-2xl btn-3d-gold">
+                            <i class="fa-solid fa-play"></i> Mainkan Sekarang
+                        </a>
+                        <button type="button" onclick="openGameModal('tembak')" class="w-full inline-flex items-center justify-center gap-2 bg-gold-50 hover:bg-gold-100 text-gold-600 font-semibold text-sm py-2.5 px-4 rounded-xl transition-colors">
+                            <i class="fa-solid fa-circle-info"></i> Pratinjau / Info Cara Main
+                        </button>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- Catatan Integrasi File Lokal untuk Pengajar KKN -->
+            <!-- <div class="mt-10 bg-emerald-50/80 border border-emerald-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-start sm:items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <div class="text-xs sm:text-sm text-emerald-900">
+                        <strong>Panduan Direktori Offline/Lokal TPA:</strong> Pastikan file utama ini berada dalam satu folder yang sama dengan <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-200 font-mono text-emerald-700">game_new.html</code>, <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-200 font-mono text-emerald-700">peta.html</code>, dan <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-200 font-mono text-emerald-700">tembak.html</code> agar tautan permainan terbuka otomatis.
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         3. KURIKULUM & MATERI PENDAMPINGAN TPA (Tab Interaktif)
+    ====================================================================== -->
+    <section id="kurikulum" class="py-16 sm:py-24 bg-skysoft-50/70 border-y-2 border-skysoft-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 font-display font-bold text-xs sm:text-sm px-4 py-1.5 rounded-full uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-layer-group"></i> Silabus Pendampingan KKN
+                </span>
+                <h2 class="font-display font-bold text-3xl sm:text-4xl text-emerald-900 mb-4">
+                    Kurikulum & Materi Belajar TPA
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Pilih kategori materi di bawah ini untuk melihat ringkasan pembelajaran yang didampingi oleh tim KKN bersama ustadz/ustadzah TPA.
+                </p>
+            </div>
+
+            <!-- Navigasi Tab Interaktif -->
+            <div class="flex flex-wrap justify-center gap-2.5 sm:gap-4 mb-10" role="tablist">
+                <button type="button" onclick="switchTab('iqro')" id="tab-iqro" class="tab-btn active-tab bg-emerald-600 text-white font-display font-bold text-sm sm:text-base px-5 py-3 rounded-2xl shadow-md transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-font"></i> Iqro Dasar
+                </button>
+                <button type="button" onclick="switchTab('juzamma')" id="tab-juzamma" class="tab-btn bg-white text-slate-700 hover:bg-emerald-50 border border-slate-200 font-display font-bold text-sm sm:text-base px-5 py-3 rounded-2xl transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-book-quran text-gold-500"></i> Juz Amma & Hafalan
+                </button>
+                <button type="button" onclick="switchTab('adab')" id="tab-adab" class="tab-btn bg-white text-slate-700 hover:bg-emerald-50 border border-slate-200 font-display font-bold text-sm sm:text-base px-5 py-3 rounded-2xl transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-hands-praying text-skysoft-500"></i> Adab & Doa Harian
+                </button>
+                <button type="button" onclick="switchTab('tajwid')" id="tab-tajwid" class="tab-btn bg-white text-slate-700 hover:bg-emerald-50 border border-slate-200 font-display font-bold text-sm sm:text-base px-5 py-3 rounded-2xl transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-volume-high text-emerald-600"></i> Tajwid Dasar
+                </button>
+            </div>
+
+            <!-- Kontainer Konten Tab -->
+            <div class="bg-white rounded-[2rem] border-2 border-emerald-100 p-6 sm:p-10 shadow-lg">
+                
+                <!-- KONTEN TAB 1: IQRO DASAR -->
+                <div id="content-iqro" class="tab-content">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-100">
+                        <div>
+                            <h3 class="font-display font-bold text-2xl text-emerald-900">Pengenalan Huruf Hijaiyah & Iqro Jilid 1–6</h3>
+                            <p class="text-slate-600 text-sm mt-1">Fokus pada makharijul huruf (tempat keluarnya huruf), panjang pendek (mad), dan kelancaran membaca huruf sambung.</p>
+                        </div>
+                        <a href="game_new.html" class="inline-flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shrink-0">
+                            <i class="fa-solid fa-gamepad"></i> Latihan di Petualangan Mengaji
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                        <!-- Kartu Sampel Hijaiyah -->
+                        <div class="bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-200 rounded-2xl p-4 text-center transition-colors">
+                            <span class="font-arabic text-4xl font-bold text-emerald-800 block">اَ</span>
+                            <span class="text-xs font-bold text-slate-600 mt-2 block">Alif (A)</span>
+                        </div>
+                        <div class="bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-200 rounded-2xl p-4 text-center transition-colors">
+                            <span class="font-arabic text-4xl font-bold text-emerald-800 block">بِ</span>
+                            <span class="text-xs font-bold text-slate-600 mt-2 block">Ba (Bi)</span>
+                        </div>
+                        <div class="bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-200 rounded-2xl p-4 text-center transition-colors">
+                            <span class="font-arabic text-4xl font-bold text-emerald-800 block">تُ</span>
+                            <span class="text-xs font-bold text-slate-600 mt-2 block">Ta (Tu)</span>
+                        </div>
+                        <div class="bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-200 rounded-2xl p-4 text-center transition-colors">
+                            <span class="font-arabic text-4xl font-bold text-emerald-800 block">ثَ</span>
+                            <span class="text-xs font-bold text-slate-600 mt-2 block">Tsa (Tsa)</span>
+                        </div>
+                        <div class="bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-200 rounded-2xl p-4 text-center transition-colors">
+                            <span class="font-arabic text-4xl font-bold text-emerald-800 block">جِ</span>
+                            <span class="text-xs font-bold text-slate-600 mt-2 block">Jim (Ji)</span>
+                        </div>
+                        <div class="bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-200 rounded-2xl p-4 text-center transition-colors">
+                            <span class="font-arabic text-4xl font-bold text-emerald-800 block">حُ</span>
+                            <span class="text-xs font-bold text-slate-600 mt-2 block">Ha (Hu)</span>
+                        </div>
+                        <div class="bg-gold-50 hover:bg-gold-100 border border-gold-200 rounded-2xl p-4 text-center transition-colors col-span-2 sm:col-span-1">
+                            <span class="font-arabic text-4xl font-bold text-gold-600 block">خَ</span>
+                            <span class="text-xs font-bold text-slate-600 mt-2 block">Kha (Kha)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KONTEN TAB 2: JUZ AMMA / HAFALAN SURAT PENDEK -->
+                <div id="content-juzamma" class="tab-content hidden">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-100">
+                        <div>
+                            <h3 class="font-display font-bold text-2xl text-emerald-900">Target Hafalan Surat Pendek (Juz 30)</h3>
+                            <p class="text-slate-600 text-sm mt-1">Metode setoran hafalan bertahap dengan murojaah bersama sebelum dan sesudah bermain game edukasi.</p>
+                        </div>
+                        <a href="peta.html" class="inline-flex items-center gap-2 bg-skysoft-100 hover:bg-skysoft-200 text-skysoft-600 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shrink-0">
+                            <i class="fa-solid fa-map-location-dot"></i> Uji Hafalan di Peta Jelajah
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-emerald-600">Level 1 • Wajib</span>
+                                <h4 class="font-display font-bold text-lg text-slate-800">QS. Al-Fatihah & An-Nas</h4>
+                                <p class="text-xs text-slate-500">7 Ayat & 6 Ayat • Bacaan Shalat</p>
+                            </div>
+                            <span class="font-arabic text-2xl text-emerald-700 font-bold">النَّاس</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-emerald-600">Level 2 • Wajib</span>
+                                <h4 class="font-display font-bold text-lg text-slate-800">QS. Al-Falaq & Al-Ikhlas</h4>
+                                <p class="text-xs text-slate-500">5 Ayat & 4 Ayat • Perlindungan & Tauhid</p>
+                            </div>
+                            <span class="font-arabic text-2xl text-emerald-700 font-bold">الْإِخْلَاص</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-gold-600">Level 3 • Lanjutan</span>
+                                <h4 class="font-display font-bold text-lg text-slate-800">QS. Al-Kautsar – Al-Fil</h4>
+                                <p class="text-xs text-slate-500">Target Wisuda Santri KKN</p>
+                            </div>
+                            <span class="font-arabic text-2xl text-gold-600 font-bold">الْكَوْثَر</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KONTEN TAB 3: ADAB & DOA HARIAN -->
+                <div id="content-adab" class="tab-content hidden">
+                    <div class="pb-6 mb-6 border-b border-slate-100">
+                        <h3 class="font-display font-bold text-2xl text-emerald-900">Pembiasaan Adab Islami & Doa Sehari-hari</h3>
+                        <p class="text-slate-600 text-sm mt-1">Membentuk karakter santri yang sopan kepada orang tua, guru mengaji, dan menyayangi sesama teman.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="bg-gold-50/70 border border-gold-200 rounded-2xl p-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-display font-bold text-emerald-900">Doa Sebelum Belajar</span>
+                                <span class="text-xs bg-gold-200 text-amber-900 font-bold px-2.5 py-0.5 rounded-full">Hafalan Harian</span>
+                            </div>
+                            <p class="font-arabic text-2xl text-right text-emerald-900 leading-loose my-2">
+                                رَبِّ زِدْنِي عِلْمًا وَارْزُقْنِي فَهْمًا
+                            </p>
+                            <p class="text-xs sm:text-sm text-slate-600 italic">
+                                "Ya Rabbku, tambahkanlah kepadaku ilmu pengetahuan dan berilah aku karunia untuk dapat memahaminya."
+                            </p>
+                        </div>
+                        <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-display font-bold text-emerald-900">Adab Terhadap Al-Quran</span>
+                                <span class="text-xs bg-emerald-200 text-emerald-900 font-bold px-2.5 py-0.5 rounded-full">Praktik TPA</span>
+                            </div>
+                            <ul class="text-sm text-slate-700 space-y-2 mt-2">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-emerald-600"></i> Berwudhu sebelum menyentuh mushaf Al-Quran.</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-emerald-600"></i> Membaca Ta'awudz dan Basmalah dengan tartil.</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-emerald-600"></i> Meletakkan Al-Quran/Iqro di tempat yang tinggi dan bersih.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KONTEN TAB 4: TAJWID DASAR -->
+                <div id="content-tajwid" class="tab-content hidden">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-100">
+                        <div>
+                            <h3 class="font-display font-bold text-2xl text-emerald-900">Pengenalan Hukum Tajwid Dasar</h3>
+                            <p class="text-slate-600 text-sm mt-1">Belajar hukum bacaan Nun Sukun/Tanwin dan Qalqalah secara menyenangkan.</p>
+                        </div>
+                        <a href="tembak.html" class="inline-flex items-center gap-2 bg-gold-100 hover:bg-gold-200 text-gold-600 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shrink-0">
+                            <i class="fa-solid fa-crosshairs"></i> Uji Tajwid di Tembak Kata
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="p-5 rounded-2xl border-2 border-emerald-100 bg-emerald-50/40">
+                            <span class="inline-block bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-2">Idzhar Halqi</span>
+                            <h4 class="font-display font-bold text-lg text-slate-800">Dibaca Jelas</h4>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-1">Apabila Nun Sukun (نْ) atau Tanwin bertemu huruf: <strong>ا ح خ ع غ هـ</strong>.</p>
+                        </div>
+                        <div class="p-5 rounded-2xl border-2 border-skysoft-100 bg-skysoft-50/40">
+                            <span class="inline-block bg-skysoft-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-2">Idgham Bighunnah</span>
+                            <h4 class="font-display font-bold text-lg text-slate-800">Masuk dengan Dengung</h4>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-1">Apabila Nun Sukun (نْ) atau Tanwin bertemu huruf: <strong>ي ن م و</strong>.</p>
+                        </div>
+                        <div class="p-5 rounded-2xl border-2 border-gold-200 bg-gold-50/40">
+                            <span class="inline-block bg-gold-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-2">Qalqalah</span>
+                            <h4 class="font-display font-bold text-lg text-slate-800">Huruf Memantul</h4>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-1">Huruf pantulan yang disingkat <em>Baju Di Thoqo</em>: <strong>ب ج د ط ق</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================================
+         4. JADWAL KEGIATAN & PAPAN BINTANG PRESTASI SANTRI (Interaktif LocalStorage)
+    ====================================================================== -->
+    <!-- <section id="bintang-santri" class="py-16 sm:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start"> -->
+                
+                <!-- Kolom Kiri: Jadwal Pendampingan TPA (5 Kolom) -->
+                <!-- <div class="lg:col-span-5 bg-gradient-to-br from-emerald-800 to-emerald-950 text-white rounded-[2rem] p-6 sm:p-8 shadow-xl">
+                    <div class="inline-flex items-center gap-2 bg-white/10 text-gold-300 text-xs font-bold px-3.5 py-1.5 rounded-full mb-4">
+                        <i class="fa-regular fa-calendar-check"></i> Jadwal Pendampingan KKN
+                    </div> -->
+                    <!-- <h2 class="font-display font-bold text-2xl sm:text-3xl mb-2">
+                        Agenda Mengaji Ceria
+                    </h2>
+                    <p class="text-emerald-200 text-sm mb-6">
+                        Dilaksanakan setiap sore di Masjid / Balai TPA bersama mahasiswa KKN.
+                    </p> -->
+
+                    <!-- <div class="space-y-4"> -->
+                        <!-- <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
+                            <div class="flex justify-between items-center text-xs font-bold text-gold-300 mb-1">
+                                <span>SENIN & RABU</span>
+                                <span>15.30 – 17.00 WIB</span>
+                            </div>
+                            <h4 class="font-display font-bold text-base">Kelas Iqro & Petualangan Mengaji</h4>
+                            <p class="text-xs text-emerald-100 mt-1">Simak bacaan Iqro 1–6 dilanjut latihan di <em>game_new.html</em>.</p>
+                        </div> -->
+
+                        <!-- <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
+                            <div class="flex justify-between items-center text-xs font-bold text-gold-300 mb-1">
+                                <span>SELASA & KAMIS</span>
+                                <span>15.30 – 17.00 WIB</span>
+                            </div>
+                            <h4 class="font-display font-bold text-base">Hafalan Juz Amma & Jelajah Peta</h4>
+                            <p class="text-xs text-emerald-100 mt-1">Setoran surat pendek & tantangan pos di <em>peta.html</em>.</p>
+                        </div> -->
+
+                        <!-- <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
+                            <div class="flex justify-between items-center text-xs font-bold text-gold-300 mb-1">
+                                <span>JUMAT CERIA</span>
+                                <span>15.30 – 17.15 WIB</span>
+                            </div>
+                            <h4 class="font-display font-bold text-base">Turnamen Tembak Kata & Bagi Bintang</h4>
+                            <p class="text-xs text-emerald-100 mt-1">Kuis tajwid seru di <em>tembak.html</em> & apresiasi santri teladan.</p>
+                        </div> -->
+                    <!-- </div> -->
+                <!-- </div> -->
+
+                <!-- Kolom Kanan: Papan Bintang Prestasi Santri Interaktif (7 Kolom) -->
+                <!-- <div class="lg:col-span-7 bg-gold-50/70 rounded-[2rem] border-2 border-gold-200 p-6 sm:p-8 shadow-lg">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-gold-600 uppercase tracking-wider">
+                                <i class="fa-solid fa-star"></i> Apresiasi Keaktifan
+                            </span>
+                            <h2 class="font-display font-bold text-2xl sm:text-3xl text-emerald-950">
+                                Papan Bintang Prestasi Santri
+                            </h2>
+                        </div>
+                        <button type="button" onclick="resetStars()" class="self-start sm:self-auto text-xs font-semibold text-slate-500 hover:text-red-600 bg-white px-3 py-2 rounded-xl border border-slate-200 transition-colors">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Reset Data
+                        </button>
+                    </div> -->
+
+                    <!-- Form Tambah Santri Baru -->
+                    <!-- <form id="add-santri-form" class="flex flex-col sm:flex-row gap-2.5 mb-6 bg-white p-3 rounded-2xl border border-gold-200 shadow-sm">
+                        <input type="text" id="santri-name-input" placeholder="Nama Santri (misal: Ahmad Fauzan)" required
+                            class="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-emerald-500">
+                        <select id="santri-level-input" class="px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-700 focus:outline-none focus:border-emerald-500">
+                            <option value="Iqro 1-2">Iqro 1–2</option>
+                            <option value="Iqro 3-4">Iqro 3–4</option>
+                            <option value="Iqro 5-6">Iqro 5–6</option>
+                            <option value="Al-Quran / Juz Amma">Al-Quran</option>
+                        </select>
+                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-sm px-5 py-2.5 rounded-xl transition-colors shrink-0">
+                            + Tambah Santri
+                        </button>
+                    </form> -->
+
+                    <!-- Daftar Leaderboard Santri -->
+                    <!-- <div id="leaderboard-list" class="space-y-3">
+                        Diisi secara dinamis oleh JavaScript + localStorage -->
+                    <!-- </div> -->
+
+                    <!-- <p class="text-xs text-slate-500 mt-4 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                        Klik tombol <strong>"+1 Bintang"</strong> setiap kali santri berhasil menyelesaikan bacaan atau memenangkan game edukasi. Data tersimpan otomatis di browser.
+                    </p>  -->
+                <!-- </div> -->
+
+            <!-- </div> -->
+        <!-- </div> -->
+    <!-- </section> -->
+
+    <!-- =====================================================================
+         5. FOOTER LAPORAN PROGRAM KERJA KKN
+    ====================================================================== -->
+    <footer class="bg-emerald-950 text-emerald-100 pt-14 pb-10 border-t-4 border-gold-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-emerald-800/80">
+                
+                <!-- Identitas Program KKN -->
+                <div class="md:col-span-5">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-11 h-11 rounded-2xl bg-emerald-800 flex items-center justify-center text-gold-400 border border-emerald-700">
+                            <i class="fa-solid fa-mosque text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-white">GERAKAN MENGAJI CERIA</h3>
+                            <p class="text-xs text-emerald-300">Pendampingan Belajar Al-Quran Santri (TPA)</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-emerald-200/90 leading-relaxed mb-4">
+                        Program kerja unggulan bidang keagamaan dan pendidikan anak dalam rangka Kuliah Kerja Nyata (KKN) Pengabdian kepada Masyarakat. Mengintegrasikan metode klasikal TPA dengan media permainan digital interaktif.
+                    </p>
+                    <div class="inline-flex items-center gap-2 text-xs font-semibold bg-emerald-900/90 text-gold-300 px-3.5 py-2 rounded-xl border border-emerald-800">
+                        <i class="fa-solid fa-location-dot"></i> Lokasi: Taman Pendidikan Al-Quran (TPA) Desa Mitra KKN
+                    </div>
+                </div>
+
+                <!-- Tautan Cepat Arena Game -->
+                <div class="md:col-span-4">
+                    <h4 class="font-display font-bold text-base text-white mb-4">Akses Cepat Modul Game</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li>
+                            <a href="Petualangan.html" class="hover:text-gold-300 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-angle-right text-gold-400"></i> Petualangan Mengaji 
+                            </a>
+                        </li>
+                        <li>
+                            <a href="peta.html" class="hover:text-gold-300 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-angle-right text-gold-400"></i> Peta Jelajah Santri 
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tembak.html" class="hover:text-gold-300 transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-angle-right text-gold-400"></i> Tembak Kata Hijaiyah & Tajwid 
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Ringkasan Luaran Program -->
+                <div class="md:col-span-3">
+                    <h4 class="font-display font-bold text-base text-white mb-4">Luaran Program Kerja</h4>
+                    <ul class="space-y-2 text-xs sm:text-sm text-emerald-200">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Peningkatan minat baca Al-Quran</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Media ajar digital interaktif TPA</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-gold-400"></i> Evaluasi hafalan & tajwid dasar</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-emerald-300/80 gap-4">
+                <p>&copy; 2026 Tim Pengabdian Masyarakat KKN — Gerakan Mengaji Ceria TPA. Hak Cipta Dilindungi.</p>
+                <p class="font-arabic text-base text-gold-300">جَزَاكُمُ اللهُ خَيْرًا كَثِيْرًا</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =====================================================================
+         MODAL INTERAKTIF: PRATINJAU & INFO CARA MAIN GAME
+    ====================================================================== -->
+    <div id="game-info-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-[2rem] max-w-lg w-full border-4 border-emerald-200 shadow-2xl overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+            <!-- Header Modal -->
+            <div id="modal-header-bg" class="bg-emerald-600 p-6 text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl">
+                        <i id="modal-icon" class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <div>
+                        <span id="modal-file-badge" class="text-xs font-mono bg-black/25 px-2.5 py-0.5 rounded-md">game_new.html</span>
+                        <h3 id="modal-title" class="font-display font-bold text-xl sm:text-2xl mt-0.5">Judul Game</h3>
+                    </div>
+                </div>
+                <button type="button" onclick="closeGameModal()" aria-label="Tutup Modal" class="w-10 h-10 rounded-xl bg-white/15 hover:bg-white/30 flex items-center justify-center text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Isi Modal -->
+            <div class="p-6 space-y-4">
+                <div>
+                    <h4 class="font-display font-bold text-sm uppercase tracking-wider text-emerald-700 mb-1">Tujuan Pembelajaran:</h4>
+                    <p id="modal-objective" class="text-sm text-slate-600 leading-relaxed"></p>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                    <h4 class="font-display font-bold text-sm uppercase tracking-wider text-slate-800 mb-2.5">
+                        <i class="fa-solid fa-list-ol text-gold-500 mr-1.5"></i> Cara Bermain:
+                    </h4>
+                    <ol id="modal-steps" class="list-decimal list-inside space-y-2 text-sm text-slate-700"></ol>
+                </div>
+
+                <div class="pt-2 flex flex-col sm:flex-row gap-3">
+                    <a id="modal-play-link" href="game_new.html" class="flex-1 inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold py-3.5 px-5 rounded-2xl shadow-md transition-colors">
+                        <i class="fa-solid fa-play"></i> Buka & Mainkan File
+                    </a>
+                    <button type="button" onclick="closeGameModal()" class="sm:w-auto inline-flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-5 rounded-2xl transition-colors">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         TOAST NOTIFICATION (Pengganti alert() yang ramah UI)
+    ====================================================================== -->
+    <div id="toast-box" class="fixed bottom-5 right-5 z-50 hidden items-center gap-3 bg-emerald-900 text-white px-5 py-3.5 rounded-2xl shadow-xl border border-emerald-700 text-sm font-semibold">
+        <i class="fa-solid fa-star text-gold-400 text-lg"></i>
+        <span id="toast-message">Bintang berhasil ditambahkan!</span>
+    </div>
+
+    <!-- =====================================================================
+         JAVASCRIPT INTERAKTIF
+    ====================================================================== -->
+    <script>
+        // 1. Toggle Menu Mobile
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 2. Data Panduan Modal untuk 3 Game Edukasi
+        const gameGuides = {
+            petualangan: {
+                title: 'Petualangan Mengaji',
+                file: 'game_new.html',
+                headerClass: 'bg-emerald-600',
+                icon: 'fa-book-open-reader',
+                objective: 'Melatih santri mengenali bentuk huruf hijaiyah tunggal maupun berharakat (Fathah, Kasrah, Dhammah) serta menguji pelafalan dasar melalui kuis interaktif.',
+                steps: [
+                    'Klik tombol "Buka & Mainkan File" untuk membuka game_new.html.',
+                    'Perhatikan huruf hijaiyah atau tanda harakat yang muncul di layar.',
+                    'Pilih jawaban bacaan latin yang paling tepat untuk melangkah ke level berikutnya.',
+                    'Kumpulkan poin tertinggi dan laporkan ke kakak pendamping KKN untuk mendapatkan bintang!'
+                ]
+            },
+            peta: {
+                title: 'Peta Jelajah Santri',
+                file: 'peta.html',
+                headerClass: 'bg-skysoft-600',
+                icon: 'fa-map-location-dot',
+                objective: 'Mendorong semangat murojaah (mengulang hafalan) surat-surat pendek Juz Amma melalui konsep petualangan pos demi pos di atas peta.',
+                steps: [
+                    'Klik tombol "Buka & Mainkan File" untuk masuk ke peta.html.',
+                    'Pilih titik pos belajar Al-Quran pertama pada peta petualangan.',
+                    'Selesaikan tantangan sambung ayat atau tebak nama surat pendek di setiap pos.',
+                    'Taklukkan seluruh pos pada peta untuk membuka lencana Juara Hafidz Cilik.'
+                ]
+            },
+            tembak: {
+                title: 'Tembak Kata Hijaiyah & Tajwid',
+                file: 'tembak.html',
+                headerClass: 'bg-gold-500',
+                icon: 'fa-crosshairs',
+                objective: 'Mengasah ketangkasan visual dan daya ingat santri dalam mencocokkan kosakata bahasa Arab sehari-hari serta hukum bacaan tajwid dasar.',
+                steps: [
+                    'Klik tombol "Buka & Mainkan File" untuk membuka tembak.html.',
+                    'Baca petunjuk soal/arti kata atau hukum tajwid yang diminta pada papan target.',
+                    'Arahkan dan tembak kata Arab atau contoh bacaan tajwid yang sesuai sebelum waktu habis.',
+                    'Hindari menembak target yang salah agar nyawa dan skor kombo tetap terjaga.'
+                ]
+            }
+        };
+
+        function openGameModal(gameKey) {
+            const data = gameGuides[gameKey];
+            if (!data) return;
+
+            const modal = document.getElementById('game-info-modal');
+            const header = document.getElementById('modal-header-bg');
+            
+            header.className = `${data.headerClass} p-6 text-white flex items-center justify-between`;
+            document.getElementById('modal-icon').className = `fa-solid ${data.icon}`;
+            document.getElementById('modal-file-badge').textContent = data.file;
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-objective').textContent = data.objective;
+            
+            const stepsList = document.getElementById('modal-steps');
+            stepsList.innerHTML = data.steps.map(step => `<li>${step}</li>`).join('');
+
+            const playLink = document.getElementById('modal-play-link');
+            playLink.href = data.file;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeGameModal() {
+            const modal = document.getElementById('game-info-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Tutup modal jika klik di luar kotak modal
+        document.getElementById('game-info-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'game-info-modal') {
+                closeGameModal();
+            }
+        });
+
+        // 3. Sistem Tab Kurikulum & Materi TPA
+        function switchTab(tabId) {
+            // Sembunyikan semua konten tab
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Reset style semua tombol tab
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-md');
+                btn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+            });
+
+            // Tampilkan konten tab aktif
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+
+            // Aktifkan style tombol yang diklik
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+            activeBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-md');
+        }
+
+        // 4. Sistem Papan Bintang Prestasi Santri (Menggunakan localStorage)
+        const STORAGE_KEY = 'kkn_tpa_santri_stars_v1';
+
+        const defaultSantriData = [
+            { id: 1, name: 'Aisyah Putri Ramadhani', level: 'Al-Quran / Juz Amma', stars: 18 },
+            { id: 2, name: 'Muhammad Fatih Al-Ghifari', level: 'Iqro 5-6', stars: 15 },
+            { id: 3, name: 'Zayd Abdullah', level: 'Iqro 3-4', stars: 12 },
+            { id: 4, name: 'Nayla Khairunnisa', level: 'Iqro 1-2', stars: 10 }
+        ];
+
+        function getSantriData() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                return saved ? JSON.parse(saved) : [...defaultSantriData];
+            } catch (e) {
+                return [...defaultSantriData];
+            }
+        }
+
+        function saveSantriData(data) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } catch (e) {
+                console.warn('Penyimpanan lokal tidak tersedia.');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-box');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+            
+            clearTimeout(window.toastTimeout);
+            window.toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, 2800);
+        }
+
+        function renderLeaderboard() {
+            const listEl = document.getElementById('leaderboard-list');
+            const data = getSantriData().sort((a, b) => b.stars - a.stars);
+
+            listEl.innerHTML = data.map((santri, index) => {
+                const rankBadge = index === 0
+                    ? '<span class="w-8 h-8 rounded-xl bg-gold-400 text-emerald-950 font-display font-bold flex items-center justify-center shadow-sm">1</span>'
+                    : index === 1
+                    ? '<span class="w-8 h-8 rounded-xl bg-slate-200 text-slate-700 font-display font-bold flex items-center justify-center">2</span>'
+                    : index === 2
+                    ? '<span class="w-8 h-8 rounded-xl bg-amber-200 text-amber-900 font-display font-bold flex items-center justify-center">3</span>'
+                    : `<span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 font-display font-bold flex items-center justify-center">${index + 1}</span>`;
+
+                return `
+                    <div class="bg-white rounded-2xl p-3.5 sm:p-4 border border-gold-200/80 shadow-sm flex items-center justify-between gap-3 transition-all hover:border-emerald-300">
+                        <div class="flex items-center gap-3 min-w-0">
+                            ${rankBadge}
+                            <div class="truncate">
+                                <h4 class="font-display font-bold text-sm sm:text-base text-slate-800 truncate">${escapeHTML(santri.name)}</h4>
+                                <span class="inline-block text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                                    ${escapeHTML(santri.level)}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                            <div class="bg-gold-50 border border-gold-200 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+                                <i class="fa-solid fa-star text-gold-500"></i>
+                                <span class="font-display font-bold text-sm sm:text-base text-amber-900">${santri.stars}</span>
+                            </div>
+                            <button type="button" onclick="addStar(${santri.id})" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs px-3 py-2 rounded-xl shadow-sm transition-all">
+                                +1 <i class="fa-solid fa-star text-gold-300"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addStar(id) {
+            const data = getSantriData();
+            const target = data.find(s => s.id === id);
+            if (target) {
+                target.stars += 1;
+                saveSantriData(data);
+                renderLeaderboard();
+                showToast(`MasyaAllah! +1 Bintang untuk ${target.name} ⭐`);
+            }
+        }
+
+        function resetStars() {
+            saveSantriData([...defaultSantriData]);
+            renderLeaderboard();
+            showToast('Data papan bintang dikembalikan ke awal.');
+        }
+
+        document.getElementById('add-santri-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('santri-name-input');
+            const levelInput = document.getElementById('santri-level-input');
+            const cleanName = nameInput.value.trim();
+
+            if (!cleanName) return;
+
+            const data = getSantriData();
+            data.push({
+                id: Date.now(),
+                name: cleanName,
+                level: levelInput.value,
+                stars: 5 // Bintang sambutan santri baru
+            });
+
+            saveSantriData(data);
+            renderLeaderboard();
+            nameInput.value = '';
+            showToast(`Santri ${cleanName} berhasil ditambahkan (+5 Bintang Awal)!`);
+        });
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag]));
+        }
+
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLeaderboard();
+        });
+    </script>
+</body>
+</html>
